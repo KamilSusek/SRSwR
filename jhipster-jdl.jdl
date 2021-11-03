@@ -1,0 +1,51 @@
+application {
+  config {
+    prodDatabaseType postgresql,
+	
+	clientFramework react,
+	packageName polsl.tai.srswr,
+	baseName swsr,
+	languages [pl],
+	devDatabaseType postgresql
+  }
+}
+
+entity Reservation {
+	startDate Instant
+	endDate Instant
+	tableNumber String
+}
+
+entity Restaurant{
+	name String
+    location String
+    street String
+    buildingNumber String
+    rating Double
+}
+
+entity RestaurantUser {
+	name String
+    password String
+    email String
+    role String
+}
+
+relationship ManyToMany {
+	RestaurantUser{reservation} to Reservation{user}
+}
+
+relationship OneToMany {
+	Reservation to Restaurant{reservation}
+
+}
+
+relationship OneToMany {
+	Restaurant to RestaurantUser{restauration}
+
+}
+
+ dto * with mapstruct
+
+service all with serviceImpl
+
