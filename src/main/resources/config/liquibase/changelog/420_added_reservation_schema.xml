@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="1" author="KamilS">
+        <createTable tableName="reservation">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="restaurant_name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reservation_start" type="instant">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reservation_end" type="instant">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notes" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="owner_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="id"
+                                 baseTableName="jhi_user"
+                                 constraintName="fk_client_reservation"
+                                 referencedColumnNames="client_id"
+                                 referencedTableName="reservation"/>
+
+        <addForeignKeyConstraint baseColumnNames="id"
+                                 baseTableName="jhi_user"
+                                 constraintName="fk_owner_reservation"
+                                 referencedColumnNames="owner_id"
+                                 referencedTableName="reservation"/>
+    </changeSet>
+</databaseChangeLog>
