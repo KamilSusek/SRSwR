@@ -94,6 +94,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 
+    @OneToMany(mappedBy = "client")
+    private Set<Reservation> clientReservations;
+
+    @OneToMany(mappedBy = "owner")
+    private Set<Reservation> ownerReservations;
 
     public Long getId() {
         return id;
@@ -198,6 +203,22 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
+    }
+
+    public Set<Reservation> getClientReservations() {
+        return clientReservations;
+    }
+
+    public void setClientReservations(Set<Reservation> clientReservations) {
+        this.clientReservations = clientReservations;
+    }
+
+    public Set<Reservation> getOwnerReservations() {
+        return ownerReservations;
+    }
+
+    public void setOwnerReservations(Set<Reservation> ownerReservations) {
+        this.ownerReservations = ownerReservations;
     }
 
     @Override
