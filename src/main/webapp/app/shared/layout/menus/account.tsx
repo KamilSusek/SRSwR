@@ -1,13 +1,12 @@
 import React from 'react';
 import MenuItem from 'app/shared/layout/menus/menu-item';
-import { DropdownItem } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { NavItem, NavLink } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
 import { Translate, translate } from 'react-jhipster';
 import { NavDropdown } from './menu-components';
 
 const accountMenuItemsAuthenticated = (
-  <>
+  <NavDropdown icon="user" name={translate('global.menu.account.main')} id="account-menu">
     <MenuItem icon="wrench" to="/account/settings">
       <Translate contentKey="global.menu.account.settings">Settings</Translate>
     </MenuItem>
@@ -17,24 +16,28 @@ const accountMenuItemsAuthenticated = (
     <MenuItem icon="sign-out-alt" to="/logout">
       <Translate contentKey="global.menu.account.logout">Sign out</Translate>
     </MenuItem>
-  </>
+  </NavDropdown>
 );
 
 const accountMenuItems = (
   <>
-    <MenuItem id="login-item" icon="sign-in-alt" to="/login">
-      <Translate contentKey="global.menu.account.login">Sign in</Translate>
-    </MenuItem>
-    <MenuItem icon="sign-in-alt" to="/account/register">
-      <Translate contentKey="global.menu.account.register">Register</Translate>
-    </MenuItem>
+    <NavItem>
+      <NavLink tag={Link} to="/login" className="d-flex align-items-center">
+        <span>
+          <Translate contentKey="global.menu.account.login">Sign in</Translate>
+        </span>
+      </NavLink>
+    </NavItem>
+    <NavItem>
+      <NavLink tag={Link} to="/account/register" className="d-flex align-items-center">
+        <span>
+          <Translate contentKey="global.menu.account.register">Sign in</Translate>
+        </span>
+      </NavLink>
+    </NavItem>
   </>
 );
 
-export const AccountMenu = ({ isAuthenticated = false }) => (
-  <NavDropdown icon="user" name={translate('global.menu.account.main')} id="account-menu">
-    {isAuthenticated ? accountMenuItemsAuthenticated : accountMenuItems}
-  </NavDropdown>
-);
+export const AccountMenu = ({ isAuthenticated = false }) => <>{isAuthenticated ? accountMenuItemsAuthenticated : accountMenuItems}</>;
 
 export default AccountMenu;
