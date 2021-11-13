@@ -12,5 +12,4 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     Page<Reservation> findAll(Pageable pageable);
 
-    Reservation createReservation(ReservationDTO reservationDTO);
 }

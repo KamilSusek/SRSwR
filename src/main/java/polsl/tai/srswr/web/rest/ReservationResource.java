@@ -4,6 +4,7 @@ import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,15 +32,14 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@NoArgsConstructor
 @RequestMapping("/api")
 public class ReservationResource {
 
     private final Logger log = LoggerFactory.getLogger(ReservationResource.class);
 
-    @Value("${jhipster.clientApp.name}")
-    private final String applicationName;
-    private final ReservationService reservationService;
-    private final ReservationRepository reservationRepository;
+    private  ReservationService reservationService;
+    private  ReservationRepository reservationRepository;
 
 
     @PostMapping("/reservations")
@@ -52,9 +52,9 @@ public class ReservationResource {
          *
          *
          */
-        Reservation newReservation = reservationRepository.createReservation(reservationDTO);
+        Reservation newReservation = new Reservation();
         return ResponseEntity.created(new URI("/api/reservations/" + newReservation.getId()))
-            .headers(HeaderUtil.createAlert(applicationName, "userManagement.created", newReservation.getId().toString()))
+            .headers(HeaderUtil.createAlert("aaa", "userManagement.created", newReservation.getId().toString()))
             .body(newReservation);
     }
 
@@ -70,7 +70,7 @@ public class ReservationResource {
         Optional<ReservationDTO> updateReservation = reservationService.updateReservation(reservationDTO);
 
         return ResponseUtil.wrapOrNotFound(updateReservation,
-            HeaderUtil.createAlert(applicationName, "userManagement.updated", reservationDTO.getId().toString()));
+            HeaderUtil.createAlert("aaa", "userManagement.updated", reservationDTO.getId().toString()));
     }
 
     @GetMapping("/reservations")
@@ -94,6 +94,6 @@ public class ReservationResource {
     public ResponseEntity<Void> deleteReservation(@PathVariable String id) {
         log.debug("REST request to delete Resservation: {}", id);
         reservationService.deleteReservation(Long.valueOf(id));
-        return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName, "userManagement.deleted", id)).build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createAlert("aaa", "userManagement.deleted", id)).build();
     }
 }
