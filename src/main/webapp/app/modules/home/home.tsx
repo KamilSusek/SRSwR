@@ -6,9 +6,11 @@ import { Translate } from 'react-jhipster';
 import { connect } from 'react-redux';
 import { Row, Col, Alert } from 'reactstrap';
 
-import { IRootState } from 'app/shared/reducers';
-
+import { defaultValues } from 'app/shared/model/reservation.model';
+import ReservationListItem from './reservations/reservation-list-item';
 export type IHomeProp = StateProps;
+
+const TEMP_DATA = [{ restaurantName: 'Esencja', reservationCode: '420420', tableNumber: 4, numberOfPlaces: 4, reservationStart: '', reservationEnd: '', notes: '' }];
 
 export const Home = (props: IHomeProp) => {
   const { account } = props;
@@ -29,6 +31,9 @@ export const Home = (props: IHomeProp) => {
         )}
       </Col>
       <h1>System Rezerwacji Stolika w Restauracji</h1>
+      {TEMP_DATA.map((item, index) => (
+        <ReservationListItem key={index} reservation={item} />
+      ))}
     </Row>
   );
 };

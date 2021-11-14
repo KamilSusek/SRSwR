@@ -19,11 +19,17 @@ public class ReservationDTO {
 
     private Long id;
 
+    private String reservationCode;
+
     private String restaurantName;
 
     private Instant reservationStart;
 
     private Instant reservationEnd;
+
+    private int numberOfPlaces;
+
+    private int tableNumber;
 
     private String notes;
 
@@ -37,9 +43,12 @@ public class ReservationDTO {
 
     public ReservationDTO(Reservation reservation) {
         this.id = reservation.getId();
+        this.reservationCode = reservation.getReservationCode();
         this.restaurantName = reservation.getRestaurantName();
         this.reservationStart = reservation.getReservationStart();
         this.reservationEnd = reservation.getReservationEnd();
+        this.numberOfPlaces = reservation.getNumberOfPlaces();
+        this.tableNumber = reservation.getTableNumber();
         this.notes = reservation.getNotes();
         this.client = Optional.of(reservation.getClient()).map(UserDTO::new).get(); //TODO to jest takie max tymczasowe
         this.owner = Optional.of(reservation.getOwner()).map(UserDTO::new).get();

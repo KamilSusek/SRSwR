@@ -11,6 +11,9 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="reservationCode" type="text">
+                <constraints unique="true" nullable="false"/>
+            </column>
             <column name="restaurant_name" type="text">
                 <constraints nullable="false"/>
             </column>
@@ -18,6 +21,12 @@
                 <constraints nullable="false"/>
             </column>
             <column name="reservation_end" type="instant">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tableNumber" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="numberOfPlaces" type="integer">
                 <constraints nullable="false"/>
             </column>
             <column name="notes" type="text">
