@@ -1,6 +1,7 @@
 import { Reservation } from 'app/shared/model/reservation.model';
 import { Container, Col, Row, Input, Label, Button } from 'reactstrap';
 import React from 'react';
+import { convertDateTimeFromServer } from '../../../shared/util/date-utils';
 
 export interface IButtonAction {
   action: () => void;
@@ -52,13 +53,13 @@ const ReservationListItem = (props: IReservationListItem) => {
         <Col xs="12" md="6">
           <Label>
             Początek rezerwacji
-            <Input type="date" value={reservationStart} disabled />
+            <Input type="text" value={convertDateTimeFromServer(reservationStart)} disabled />
           </Label>
         </Col>
         <Col xs="12" md="6">
           <Label>
             Koniec rezerwacji
-            <Input type="date" value={reservationEnd} disabled />
+            <Input type="text" value={convertDateTimeFromServer(reservationEnd)} disabled />
           </Label>
         </Col>
       </Row>

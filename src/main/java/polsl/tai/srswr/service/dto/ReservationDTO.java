@@ -50,7 +50,5 @@ public class ReservationDTO {
         this.numberOfPlaces = reservation.getNumberOfPlaces();
         this.tableNumber = reservation.getTableNumber();
         this.notes = reservation.getNotes();
-        this.client = Optional.of(reservation.getClient()).map(UserDTO::new).get(); //TODO to jest takie max tymczasowe
-        this.owner = Optional.of(reservation.getOwner()).map(UserDTO::new).get();
     }
 }

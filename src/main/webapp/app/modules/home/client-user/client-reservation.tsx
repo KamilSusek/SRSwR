@@ -8,7 +8,7 @@ import { getAllReservations } from './client-reservation.reducer';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 
-interface IClientReservation extends StateProps, DispatchProps, RouteComponentProps<{}> {}
+interface IClientReservation extends StateProps, DispatchProps {}
 
 const ClientReservation = (props: IClientReservation) => {
   return (
