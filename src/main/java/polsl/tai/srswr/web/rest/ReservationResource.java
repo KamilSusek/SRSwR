@@ -5,6 +5,7 @@ import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,17 +31,14 @@ import java.util.List;
 import java.util.Optional;
 
 
-@RestController
 @AllArgsConstructor
-@NoArgsConstructor
+@RestController
 @RequestMapping("/api")
 public class ReservationResource {
 
     private final Logger log = LoggerFactory.getLogger(ReservationResource.class);
 
-    private  ReservationService reservationService;
-    private  ReservationRepository reservationRepository;
-
+    private final ReservationService reservationService;
 
     @PostMapping("/reservations")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")

@@ -100,11 +100,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
-    private Set<Reservation> clientReservations;
+    private Set<Reservation> clientReservations = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-    private Set<Reservation> ownerReservations;
+    private Set<Reservation> ownerReservations = new HashSet<>();
 
     // Lowercase the login before saving it in database
     public void setLogin(String login) {
