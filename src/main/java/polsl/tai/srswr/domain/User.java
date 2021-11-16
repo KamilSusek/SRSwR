@@ -106,6 +106,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    private Set<Restaurant> restaurants = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private Set<Reservation> ownerReservations = new HashSet<>();
 
     // Lowercase the login before saving it in database
