@@ -1,2 +1,4 @@
 id;reservation_code;restaurant_name;reservation_start;reservation_end;table_number;number_of_places;notes;client_id;owner_id
 1;code;Esencja;2021-11-15 18:50:36;2021-11-15 18:50:36;4;2;NULL;5;NULL
+2;code1;Brama;2021-11-15 18:50:36;2021-11-15 18:50:36;4;2;NULL;NULL;NULL
+3;code2;Ambasada na Madagaskarze;2021-11-15 18:50:36;2021-11-15 18:50:36;4;2;NULL;NULL;NULL

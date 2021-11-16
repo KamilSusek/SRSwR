@@ -16,24 +16,24 @@ const ReservationListItem = (props: IReservationListItem) => {
   const { restaurantName, reservationCode, numberOfPlaces, tableNumber, reservationStart, reservationEnd } = props.data;
 
   const renderDetailsButton = () => (
-    <Button size="lg" color="primary" onClick={() => {}}>
+    <Button className="w-100" size="sm" onClick={() => {}}>
       Szczegóły
     </Button>
   );
 
   const renderActionButton = () => (
-    <Button size="lg" color="success" onClick={() => {}}>
+    <Button className="w-100" size="sm" color="success" onClick={() => {}}>
       Rezerwuj
     </Button>
   );
 
   return (
-    <Container className="m-1 container-md">
+    <Container className="m-1 d-flex flex-column">
       <Row>
-        <h1>{restaurantName}</h1>
+        <h4>{restaurantName}</h4>
       </Row>
       <Row>
-        <h3>Kod rezerwacji: #{reservationCode}</h3>
+        <p>Kod rezerwacji: #{reservationCode}</p>
       </Row>
       <Row className="mt-2">
         <Col xs="12" md="6">
@@ -94,11 +94,10 @@ const ReservationListItem = (props: IReservationListItem) => {
         </Col>
       </Row>
       <Row className="justify-center">
-        <Col xs="12" md="6" className="mt-1" />
-        <Col xs="12" md="3" className="mt-1">
+        <Col xs="12" md="6" className="mt-1">
           {renderDetailsButton()}
         </Col>
-        <Col xs="12" md="3" className="mt-1">
+        <Col xs="12" md="6" className="mt-1">
           {renderActionButton()}
         </Col>
       </Row>

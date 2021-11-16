@@ -15,16 +15,16 @@ interface IListComponent<Data> {
 const UIListComponent = <Data extends unknown>(props: IListComponent<Data>) => {
   const { data, ListItem, FilterElement, pagination, handlePagination } = props;
   useEffect(() => {
-    props.fetch();
-  }, []);
+    props.fetch && props.fetch();
+  }, [props.fetch]);
 
   return (
-    <Container fluid className="d-flex flex-column justify-content-center w-100">
+    <Container fluid className="d-flex flex-column justify-content-center align-items-center">
       {FilterElement && <FilterElement />}
-      <ListGroup className="mt-2">
+      <ListGroup className="mt-2 align-items-center">
         {data.length > 0 ? (
           data.map((item, index) => (
-            <ListGroupItem key={index}>
+            <ListGroupItem key={index} className="d-flex flex-column justify-center align-items-center">
               <ListItem data={item} />
             </ListGroupItem>
           ))

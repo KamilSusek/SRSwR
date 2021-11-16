@@ -36,6 +36,7 @@ export default (state: ClientReservationsState = initialState, action): ClientRe
         ...state,
         loading: false,
         reservations: action.payload.data,
+        totalItems: parseInt(action.payload.headers['x-total-count'], 10),
       };
     default:
       return state;
@@ -44,8 +45,8 @@ export default (state: ClientReservationsState = initialState, action): ClientRe
 
 // Actions
 
-export const getAllReservations = () => {
-  const requestUrl = `api/reservations`;
+export const getAllReservations = (page, size, sort) => {
+  const requestUrl = `api/not-assigned/reservations${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_RESERVATIONS,
     payload: axios.get(requestUrl),

@@ -29,6 +29,11 @@ public class ReservationService {
         return reservationRepository.findAll(pageable).map(ReservationDTO::new);
     }
 
+    @Transactional(readOnly = true)
+    public Page<ReservationDTO> getAllNotAssignedReservations(Pageable pageable) {
+        return reservationRepository.findAllByClientIsNull(pageable).map(ReservationDTO::new);
+    }
+
     public Optional<Reservation> getReservation(Long id) {
         return reservationRepository.findById(id);
     }

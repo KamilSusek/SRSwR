@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Reservation } from 'app/shared/model/reservation.model';
 import ReservationListItem from '../reservations/reservation-list-item';
 import ReservationFilters from './filters/reservation-filters';
@@ -9,15 +9,38 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { getSortState } from 'react-jhipster';
+import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 
 interface IClientReservation extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 const ClientReservation = (props: IClientReservation) => {
-  const ITEMS_PER_PAGE = 3;
 
   const [pagination, setPagination] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
+
+  useEffect(() => {
+    props.getAllReservations(pagination.activePage - 1, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
+    const endURL = `?page=${pagination.activePage}&sort=${pagination.sort},${pagination.order}`;
+    if (props.location.search !== endURL) {
+      props.history.push(`${props.location.pathname}${endURL}`);
+    }
+  }, [pagination.activePage, pagination.order, pagination.sort]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(props.location.search);
+    const page = params.get('page');
+    const sort = params.get('sort');
+    if (page && sort) {
+      const sortSplit = sort.split(',');
+      setPagination({
+        ...pagination,
+        activePage: +page,
+        sort: sortSplit[0],
+        order: sortSplit[1],
+      });
+    }
+  }, [props.location.search]);
 
   const sort = p => () =>
     setPagination({
@@ -31,10 +54,9 @@ const ClientReservation = (props: IClientReservation) => {
       ...pagination,
       activePage: currentPage,
     });
-
+    
   return (
     <UIListComponent<Reservation>
-      fetch={props.getAllReservations}
       data={props.reservations}
       FilterElement={ReservationFilters}
       ListItem={ReservationListItem}

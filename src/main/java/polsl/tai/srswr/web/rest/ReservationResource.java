@@ -78,6 +78,13 @@ public class ReservationResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+    @GetMapping("/not-assigned/reservations")
+    public ResponseEntity<List<ReservationDTO>> getAllNotAssignedReservations(Pageable pageable) {
+        final Page<ReservationDTO> page = reservationService.getAllNotAssignedReservations(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
 
     @GetMapping("/reservations/{id}:" + Constants.LOGIN_REGEX + "}")
     public ResponseEntity<ReservationDTO> getReservation(@PathVariable String id) {
