@@ -266,6 +266,7 @@ public class UserService {
 
     @Transactional
     public Optional<User> getUserWithAuthorities() {
+        Optional<User>  aaaa = SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
     }
 
