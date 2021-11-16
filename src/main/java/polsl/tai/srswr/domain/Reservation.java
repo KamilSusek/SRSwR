@@ -22,11 +22,17 @@ public class Reservation {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
+    private String reservationCode;
+
     private String restaurantName;
 
     private Instant reservationStart;
 
     private Instant reservationEnd;
+
+    private int numberOfPlaces;
+
+    private int tableNumber;
 
     private String notes;
 

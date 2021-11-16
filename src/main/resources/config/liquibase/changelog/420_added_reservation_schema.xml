@@ -11,36 +11,61 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="reservation_code" type="text">
+                <constraints unique="true" nullable="false"/>
+            </column>
             <column name="restaurant_name" type="text">
                 <constraints nullable="false"/>
             </column>
-            <column name="reservation_start" type="instant">
+            <column name="reservation_start" type="timestamp">
                 <constraints nullable="false"/>
             </column>
-            <column name="reservation_end" type="instant">
+            <column name="reservation_end" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="table_number" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="number_of_places" type="integer">
                 <constraints nullable="false"/>
             </column>
             <column name="notes" type="text">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="client_id" type="bigint">
                 <constraints nullable="true"/>
             </column>
             <column name="owner_id" type="bigint">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
         </createTable>
 
-        <addForeignKeyConstraint baseColumnNames="id"
-                                 baseTableName="jhi_user"
+        <addForeignKeyConstraint baseColumnNames="client_id"
+                                 baseTableName="reservation"
                                  constraintName="fk_client_reservation"
-                                 referencedColumnNames="client_id"
-                                 referencedTableName="reservation"/>
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
 
-        <addForeignKeyConstraint baseColumnNames="id"
-                                 baseTableName="jhi_user"
+        <addForeignKeyConstraint baseColumnNames="owner_id"
+                                 baseTableName="reservation"
                                  constraintName="fk_owner_reservation"
-                                 referencedColumnNames="owner_id"
-                                 referencedTableName="reservation"/>
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+        <loadData
+            file="config/liquibase/data/reservation.csv"
+            separator=";"
+            tableName="reservation">
+            <column name="id" type="numeric"/>
+            <column name="reservation_code" type="string"/>
+            <column name="restaurant_name" type="string"/>
+            <column name="reservation_start" type="timestamp"/>
+            <column name="reservation_end" type="timestamp"/>
+            <column name="table_number" type="numeric"/>
+            <column name="number_of_places" type="numeric"/>
+            <column name="notes" type="string"/>
+            <column name="client_id" type="numeric"/>
+            <column name="owner_id" type="numeric" />
+        </loadData>
     </changeSet>
 </databaseChangeLog>

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import polsl.tai.srswr.config.Constants;
 import polsl.tai.srswr.domain.Reservation;
 import polsl.tai.srswr.domain.User;
@@ -23,8 +24,14 @@ public class ReservationService {
         return Optional.of( reservationRepository.save(new Reservation())).map(ReservationDTO::new);
     }
 
+    @Transactional(readOnly = true)
     public Page<ReservationDTO> getAllReservations(Pageable pageable) {
         return reservationRepository.findAll(pageable).map(ReservationDTO::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ReservationDTO> getAllNotAssignedReservations(Pageable pageable) {
+        return reservationRepository.findAllByClientIsNull(pageable).map(ReservationDTO::new);
     }
 
     public Optional<Reservation> getReservation(Long id) {

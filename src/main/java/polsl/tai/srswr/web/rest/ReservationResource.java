@@ -5,6 +5,7 @@ import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,17 +31,14 @@ import java.util.List;
 import java.util.Optional;
 
 
-@RestController
 @AllArgsConstructor
-@NoArgsConstructor
+@RestController
 @RequestMapping("/api")
 public class ReservationResource {
 
     private final Logger log = LoggerFactory.getLogger(ReservationResource.class);
 
-    private  ReservationService reservationService;
-    private  ReservationRepository reservationRepository;
-
+    private final ReservationService reservationService;
 
     @PostMapping("/reservations")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
@@ -76,6 +74,13 @@ public class ReservationResource {
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationDTO>> getAllReservations(Pageable pageable) {
         final Page<ReservationDTO> page = reservationService.getAllReservations(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/not-assigned/reservations")
+    public ResponseEntity<List<ReservationDTO>> getAllNotAssignedReservations(Pageable pageable) {
+        final Page<ReservationDTO> page = reservationService.getAllNotAssignedReservations(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
