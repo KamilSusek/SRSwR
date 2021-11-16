@@ -1,7 +1,7 @@
 import { Reservation } from 'app/shared/model/reservation.model';
 import { Container, Col, Row, Input, Label, Button } from 'reactstrap';
 import React from 'react';
-import { convertDateTimeFromServer } from '../../../shared/util/date-utils';
+import { convertDateTimeFromServer, extractDate, extractTime } from '../../../shared/util/date-utils';
 
 export interface IButtonAction {
   action: () => void;
@@ -49,25 +49,56 @@ const ReservationListItem = (props: IReservationListItem) => {
           </Label>
         </Col>
       </Row>
-      <Row className="mt-2">
+      <Row>
         <Col xs="12" md="6">
-          <Label>
-            Początek rezerwacji
-            <Input type="text" value={convertDateTimeFromServer(reservationStart)} disabled />
-          </Label>
+          <Row>
+            <Col xs="12" md="6">
+              <h5>Początek rezerwacji</h5>
+            </Col>
+          </Row>
+          <Row className="d-flex align-items-center">
+            <Col xs="12" md="6">
+              <Label>
+                Data
+                <Input type="text" value={extractDate(reservationStart)} disabled />
+              </Label>
+            </Col>
+            <Col xs="12" md="4">
+              <Label>
+                Godzina
+                <Input type="text" value={extractTime(reservationStart)} disabled />
+              </Label>
+            </Col>
+          </Row>
         </Col>
         <Col xs="12" md="6">
-          <Label>
-            Koniec rezerwacji
-            <Input type="text" value={convertDateTimeFromServer(reservationEnd)} disabled />
-          </Label>
+          <Row>
+            <Col xs="12" md="6">
+              <h5>Koniec rezerwacji</h5>
+            </Col>
+          </Row>
+          <Row className="d-flex align-items-center">
+            <Col xs="12" md="6">
+              <Label>
+                Data
+                <Input type="text" value={extractDate(reservationEnd)} disabled />
+              </Label>
+            </Col>
+            <Col xs="12" md="4">
+              <Label>
+                Godzina
+                <Input type="text" value={extractTime(reservationEnd)} disabled />
+              </Label>
+            </Col>
+          </Row>
         </Col>
       </Row>
       <Row className="justify-center">
-        <Col xs="6" md="6" className="mt-1">
+        <Col xs="12" md="6" className="mt-1" />
+        <Col xs="12" md="3" className="mt-1">
           {renderDetailsButton()}
         </Col>
-        <Col xs="6" md="6" className="mt-1">
+        <Col xs="12" md="3" className="mt-1">
           {renderActionButton()}
         </Col>
       </Row>

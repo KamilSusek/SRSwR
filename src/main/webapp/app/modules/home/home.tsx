@@ -7,15 +7,10 @@ import { Container } from 'reactstrap';
 import ClientReservation from './client-user/client-reservation';
 export type IHomeProp = StateProps;
 
-
 export const Home = (props: IHomeProp) => {
   const { account } = props;
 
-  return (
-    <Container>
-      {account && account.login ? <ClientReservation /> : <div></div>}
-    </Container>
-  );
+  return <Container>{account && account.login ? <div /> : <div></div>}</Container>;
 };
 
 const mapStateToProps = storeState => ({

@@ -1,55 +1,47 @@
-import React, { useEffect } from 'react';
-import { Container, ListGroup, ListGroupItem, Alert } from 'reactstrap';
-import { defaultValues, Reservation } from 'app/shared/model/reservation.model';
+import React, { useState } from 'react';
+import { Reservation } from 'app/shared/model/reservation.model';
 import ReservationListItem from '../reservations/reservation-list-item';
 import ReservationFilters from './filters/reservation-filters';
 import { IRootState } from 'app/shared/reducers';
 import { getAllReservations } from './client-reservation.reducer';
+import UIListComponent from '../../../shared/layout/list/list';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
+import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
+import { getSortState } from 'react-jhipster';
 
-interface IClientReservation extends StateProps, DispatchProps {}
+interface IClientReservation extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 const ClientReservation = (props: IClientReservation) => {
+  const ITEMS_PER_PAGE = 3;
+
+  const [pagination, setPagination] = useState(
+    overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
+  );
+
+  const sort = p => () =>
+    setPagination({
+      ...pagination,
+      order: pagination.order === 'asc' ? 'desc' : 'asc',
+      sort: p,
+    });
+
+  const handlePagination = currentPage =>
+    setPagination({
+      ...pagination,
+      activePage: currentPage,
+    });
+
   return (
     <UIListComponent<Reservation>
       fetch={props.getAllReservations}
       data={props.reservations}
       FilterElement={ReservationFilters}
       ListItem={ReservationListItem}
+      handlePagination={handlePagination}
+      totalItems={props.totalItems}
+      pagination={pagination}
     />
-  );
-};
-
-interface IListComponent<Data> {
-  fetch?: () => void;
-  data: Data[];
-  ListItem: ({ data: Data }) => JSX.Element;
-  FilterElement?: (props: any) => JSX.Element;
-}
-
-const UIListComponent = <Data extends unknown>(props: IListComponent<Data>) => {
-  const { data, ListItem, FilterElement } = props;
-
-  useEffect(() => {
-    props.fetch();
-  }, []);
-
-  return (
-    <Container fluid className="d-flex flex-column justify-content-center w-100">
-      {FilterElement && <FilterElement />}
-      <ListGroup className="mt-2">
-        {data.length > 0 ? (
-          data.map((item, index) => (
-            <ListGroupItem key={index}>
-              <ListItem data={item} />
-            </ListGroupItem>
-          ))
-        ) : (
-          <Alert color="danger">Brak danych.</Alert>
-        )}
-      </ListGroup>
-    </Container>
   );
 };
 
