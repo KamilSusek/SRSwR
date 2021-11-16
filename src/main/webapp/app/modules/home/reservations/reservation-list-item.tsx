@@ -13,7 +13,7 @@ interface IReservationListItem {
 }
 
 const ReservationListItem = (props: IReservationListItem) => {
-  const { restaurantName, reservationCode, numberOfPlaces, tableNumber, reservationStart, reservationEnd } = props.data;
+  const { restaurant, reservationCode, numberOfPlaces, tableNumber, reservationStart, reservationEnd } = props.data;
 
   const renderDetailsButton = () => (
     <Button className="w-100" size="sm" onClick={() => {}}>
@@ -30,7 +30,7 @@ const ReservationListItem = (props: IReservationListItem) => {
   return (
     <Container className="m-1 d-flex flex-column">
       <Row>
-        <h4>{restaurantName}</h4>
+        <h4>{restaurant.restaurantName}</h4>
       </Row>
       <Row>
         <p>Kod rezerwacji: #{reservationCode}</p>
