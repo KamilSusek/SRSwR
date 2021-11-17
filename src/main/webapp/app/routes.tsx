@@ -30,6 +30,11 @@ const Client = Loadable({
   loading: () => <div>loading ...</div>,
 });
 
+const Restaurants = Loadable({
+  loader: () => import(/* webpackChunkName: "administration" */ 'app/modules/home/restaurants'),
+  loading: () => <div>loading ...</div>,
+});
+
 const Routes = () => (
   <div className="view-routes">
     <Switch>
@@ -41,6 +46,7 @@ const Routes = () => (
       <ErrorBoundaryRoute path="/account/reset/finish/:key?" component={PasswordResetFinish} />
       <PrivateRoute path="/admin" component={Admin} hasAnyAuthorities={[AUTHORITIES.ADMIN]} />
       <PrivateRoute path="/account" component={Account} hasAnyAuthorities={[AUTHORITIES.ADMIN, AUTHORITIES.USER]} />
+      <PrivateRoute path="/restaurants" component={Restaurants} hasAnyAuthorities={[AUTHORITIES.USER]} />
       <PrivateRoute path="/" component={Client} hasAnyAuthorities={[AUTHORITIES.USER]} />
       <ErrorBoundaryRoute path="/" exact component={Home} />
       <PrivateRoute path="/" component={Entities} hasAnyAuthorities={[AUTHORITIES.USER]} />
