@@ -1,15 +1,14 @@
 package polsl.tai.srswr.domain;
 
-import lombok.EqualsAndHashCode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import polsl.tai.srswr.config.Constants;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import polsl.tai.srswr.config.Constants;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -20,6 +19,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -29,7 +29,6 @@ import java.util.Set;
 @Table(name = "jhi_user")
 @Getter
 @Setter
-@EqualsAndHashCode
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class User extends AbstractAuditingEntity implements Serializable {
 
@@ -106,10 +105,27 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    private Set<Restaurant> restaurants = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private Set<Reservation> ownerReservations = new HashSet<>();
 
     // Lowercase the login before saving it in database
     public void setLogin(String login) {
         this.login = StringUtils.lowerCase(login, Locale.ENGLISH);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

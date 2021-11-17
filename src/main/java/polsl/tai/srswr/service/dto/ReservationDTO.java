@@ -21,8 +21,6 @@ public class ReservationDTO {
 
     private String reservationCode;
 
-    private String restaurantName;
-
     private Instant reservationStart;
 
     private Instant reservationEnd;
@@ -33,18 +31,16 @@ public class ReservationDTO {
 
     private String notes;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id")
+    private RestaurantDTO restaurant;
+
     private UserDTO client;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
     private UserDTO owner;
 
     public ReservationDTO(Reservation reservation) {
         this.id = reservation.getId();
         this.reservationCode = reservation.getReservationCode();
-        this.restaurantName = reservation.getRestaurantName();
+        this.restaurant = new RestaurantDTO(reservation.getRestaurant());
         this.reservationStart = reservation.getReservationStart();
         this.reservationEnd = reservation.getReservationEnd();
         this.numberOfPlaces = reservation.getNumberOfPlaces();

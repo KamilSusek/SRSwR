@@ -24,8 +24,6 @@ public class Reservation {
 
     private String reservationCode;
 
-    private String restaurantName;
-
     private Instant reservationStart;
 
     private Instant reservationEnd;
@@ -39,6 +37,10 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
+
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)

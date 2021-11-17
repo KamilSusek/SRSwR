@@ -33,3 +33,11 @@ export const Home = props => (
     </NavLink>
   </NavItem>
 );
+
+export const Restaurants = props => (
+  <NavItem>
+    <NavLink tag={Link} to="/restaurants" className="d-flex align-items-center">
+      <span>Restauracje</span>
+    </NavLink>
+  </NavItem>
+);

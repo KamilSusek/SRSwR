@@ -14,9 +14,6 @@
             <column name="reservation_code" type="text">
                 <constraints unique="true" nullable="false"/>
             </column>
-            <column name="restaurant_name" type="text">
-                <constraints nullable="false"/>
-            </column>
             <column name="reservation_start" type="timestamp">
                 <constraints nullable="false"/>
             </column>
@@ -32,6 +29,9 @@
             <column name="notes" type="text">
                 <constraints nullable="true"/>
             </column>
+            <column name="restaurant_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
             <column name="client_id" type="bigint">
                 <constraints nullable="true"/>
             </column>
@@ -39,6 +39,12 @@
                 <constraints nullable="true"/>
             </column>
         </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="restaurant_id"
+                                 baseTableName="reservation"
+                                 constraintName="fk_reservation_restaurant"
+                                 referencedColumnNames="id"
+                                 referencedTableName="restaurant"/>
 
         <addForeignKeyConstraint baseColumnNames="client_id"
                                  baseTableName="reservation"
@@ -66,6 +72,7 @@
             <column name="notes" type="string"/>
             <column name="client_id" type="numeric"/>
             <column name="owner_id" type="numeric" />
+            <column name="restaurant_id" type="numeric" />
         </loadData>
     </changeSet>
 </databaseChangeLog>

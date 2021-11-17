@@ -10,16 +10,22 @@ interface IListComponent<Data> {
   pagination: IPaginationBaseState;
   totalItems: number;
   handlePagination: (currentPage: number) => void;
+  ActionButton?: JSX.Element;
+  title: string;
 }
 
 const UIListComponent = <Data extends unknown>(props: IListComponent<Data>) => {
-  const { data, ListItem, FilterElement, pagination, handlePagination } = props;
+  const { data, ListItem, FilterElement, ActionButton, pagination, handlePagination } = props;
   useEffect(() => {
     props.fetch && props.fetch();
   }, [props.fetch]);
 
   return (
     <Container fluid className="d-flex flex-column justify-content-center align-items-center">
+      <Row className="w-100 d-flex justify-content-between m-2">
+        <h1>{props.title}</h1>
+        {ActionButton && ActionButton}
+      </Row>
       {FilterElement && <FilterElement />}
       <ListGroup className="mt-2 align-items-center">
         {data.length > 0 ? (

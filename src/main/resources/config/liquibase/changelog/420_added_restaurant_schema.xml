@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="1" author="KamilS">
+        <createTable tableName="restaurant">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="restaurant_name" type="text">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="city" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="postal_code" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="street" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="owner_id"
+                                 baseTableName="restaurant"
+                                 constraintName="fk_owner_restaurant"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+        <loadData
+            file="config/liquibase/data/restaurant.csv"
+            separator=";"
+            tableName="restaurant">
+            <column name="id" type="numeric"/>
+            <column name="restaurant_name" type="string"/>
+            <column name="city" type="string"/>
+            <column name="street" type="string"/>
+            <column name="postalCode" type="string"/>
+            <column name="description" type="string"/>
+            <column name="owner_id" type="numeric" />
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

@@ -13,6 +13,7 @@ import password, { PasswordState } from 'app/modules/account/password/password.r
 import settings, { SettingsState } from 'app/modules/account/settings/settings.reducer';
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
 import clientReservations, { ClientReservationsState } from '../../modules/home/client-user/client-reservation.reducer';
+import restaurants, { RestaurantsState } from '../../modules/home/restaurants/restaurant.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -27,6 +28,7 @@ export interface IRootState {
   readonly password: PasswordState;
   readonly settings: SettingsState;
   readonly clientReservations: ClientReservationsState;
+  readonly restaurants: RestaurantsState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -43,6 +45,7 @@ const rootReducer = combineReducers<IRootState>({
   password,
   settings,
   clientReservations,
+  restaurants,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
 });
