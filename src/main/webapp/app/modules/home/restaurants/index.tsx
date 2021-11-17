@@ -6,8 +6,8 @@ import RestaurantsList from './restaurants-list';
 
 const Routes = ({ match }) => (
   <div>
-    <ErrorBoundaryRoute path='/restaurants' component={RestaurantsList} />
-    <ErrorBoundaryRoute path='/restaurants/create' component={RestaurantsForm} />
+    <ErrorBoundaryRoute exact path='/restaurants' component={RestaurantsList} />
+    <ErrorBoundaryRoute exact path='/restaurants/create' component={RestaurantsForm} />
   </div>
 );
 

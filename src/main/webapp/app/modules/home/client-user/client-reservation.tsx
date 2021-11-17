@@ -14,7 +14,6 @@ import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 interface IClientReservation extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 const ClientReservation = (props: IClientReservation) => {
-
   const [pagination, setPagination] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
@@ -54,9 +53,10 @@ const ClientReservation = (props: IClientReservation) => {
       ...pagination,
       activePage: currentPage,
     });
-    
+
   return (
     <UIListComponent<Reservation>
+      title="Wszystkie rezerwacje"
       data={props.reservations}
       FilterElement={ReservationFilters}
       ListItem={ReservationListItem}

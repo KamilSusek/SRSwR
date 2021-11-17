@@ -7,6 +7,7 @@ import { createRestaurant } from './restaurant.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect, useDispatch } from 'react-redux';
 import { RouteComponentProps, useHistory } from 'react-router';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface IRestaurantForm {
   restaurantName: string;
@@ -41,6 +42,10 @@ const RestaurantsForm = (props: IRestaurantsForm) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const goBack = () => {
+    history.push('/restaurants');
+  };
+
   const onSubmit = values => {
     dispatch(createRestaurant(values));
   };
@@ -53,7 +58,7 @@ const RestaurantsForm = (props: IRestaurantsForm) => {
 
   useEffect(() => {
     if (updateSuccess) {
-      history.push('/restaurants');
+      goBack();
     }
   }, [updateSuccess]);
 
@@ -61,7 +66,12 @@ const RestaurantsForm = (props: IRestaurantsForm) => {
 
   return (
     <Container style={{ width: '66vw' }} className="d-flex w-66 flex-column justify-center card" fluid>
-      <h1>Dodaj restauracje</h1>
+      <Row className="d-flex justify-content-between align-items-center m-1">
+        <h1>Dodaj restauracje</h1>
+        <Button onClick={goBack} color="danger">
+          <FontAwesomeIcon icon="times" />
+        </Button>
+      </Row>
       <Row>
         <Col xs="12" md="6">
           <UIInpunt

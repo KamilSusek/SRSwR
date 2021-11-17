@@ -1,19 +1,24 @@
 package polsl.tai.srswr.web.rest;
 
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import polsl.tai.srswr.service.RestaurantService;
+import polsl.tai.srswr.service.dto.ReservationDTO;
 import polsl.tai.srswr.service.dto.RestaurantDTO;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -32,5 +37,12 @@ public class RestaurantResource {
         return ResponseEntity.created(new URI("/api/restaurants" + savedRestaurant.getId()))
             .headers(HeaderUtil.createAlert(applicationName, "userManagement.created", savedRestaurant.getId().toString()))
             .body(savedRestaurant);
+    }
+
+    @GetMapping("/restaurants")
+    public ResponseEntity<List<RestaurantDTO>> getRestaurants(Pageable pageable) {
+        final Page<RestaurantDTO> page = restaurantService.getAllRestaurants(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 }
