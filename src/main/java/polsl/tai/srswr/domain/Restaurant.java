@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import polsl.tai.srswr.service.dto.RestaurantDTO;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -41,4 +42,12 @@ public class Restaurant {
     @JsonIgnore
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
     private Set<Reservation> reservations  = new HashSet<>();
+
+    public Restaurant(RestaurantDTO dto) {
+        this.restaurantName = dto.getRestaurantName();
+        this.city = dto.getCity();
+        this.postalCode = dto.getPostalCode();
+        this.street = dto.getStreet();
+        this.description = dto.getDescription();
+    }
 }
