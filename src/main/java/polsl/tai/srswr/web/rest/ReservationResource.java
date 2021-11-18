@@ -36,23 +36,18 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class ReservationResource {
 
+
     private final Logger log = LoggerFactory.getLogger(ReservationResource.class);
 
     private final ReservationService reservationService;
 
+    // TODO DODAĆ ODPOWIEDNIĄ ROLĘ
     @PostMapping("/reservations")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<Reservation> createReservation(@Valid @RequestBody ReservationDTO reservationDTO) throws URISyntaxException {
+    public ResponseEntity<ReservationDTO> createReservation(@Valid @RequestBody ReservationDTO reservationDTO) throws URISyntaxException {
         log.debug("REST request to save Reservation : {}", reservationDTO);
-
-        /*TODO plucie sie jak cos jest zle
-         *
-         *
-         *
-         */
-        Reservation newReservation = new Reservation();
+        ReservationDTO newReservation = reservationService.createReservation(reservationDTO);
         return ResponseEntity.created(new URI("/api/reservations/" + newReservation.getId()))
-            .headers(HeaderUtil.createAlert("aaa", "userManagement.created", newReservation.getId().toString()))
+            .headers(HeaderUtil.createAlert("application", "userManagement.created", newReservation.getId().toString()))
             .body(newReservation);
     }
 

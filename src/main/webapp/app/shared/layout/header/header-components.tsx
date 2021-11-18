@@ -41,3 +41,11 @@ export const Restaurants = props => (
     </NavLink>
   </NavItem>
 );
+
+export const AddReservation = props => (
+  <NavItem>
+    <NavLink tag={Link} to="/reservations/create" className="d-flex align-items-center">
+      <span>Dodaj rezerwacje</span>
+    </NavLink>
+  </NavItem>
+);

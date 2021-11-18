@@ -6,6 +6,7 @@ import { ICrudPutAction } from 'react-jhipster';
 
 export const ACTION_TYPES = {
   FETCH_RESTAURANTS: 'restaurants/FETCH_RESTAURANTS',
+  FETCH_RESTAURANTS_NOT_PAGED: 'restaurants/FETCH_RESTAURANTS_NOT_PAGED',
   CREATE_RESTAURANT: 'restaurants/CREATE_RESTAURANT',
 };
 
@@ -30,6 +31,12 @@ export default (state: RestaurantsState = initialState, action): RestaurantsStat
         errorMessage: null,
         loading: true,
       };
+    case REQUEST(ACTION_TYPES.FETCH_RESTAURANTS_NOT_PAGED):
+      return {
+        ...state,
+        errorMessage: null,
+        loading: true,
+      };
     case REQUEST(ACTION_TYPES.CREATE_RESTAURANT):
       return {
         ...state,
@@ -38,6 +45,12 @@ export default (state: RestaurantsState = initialState, action): RestaurantsStat
         updating: true,
       };
     case FAILURE(ACTION_TYPES.FETCH_RESTAURANTS):
+      return {
+        ...state,
+        loading: false,
+        errorMessage: action.payload,
+      };
+    case FAILURE(ACTION_TYPES.FETCH_RESTAURANTS_NOT_PAGED):
       return {
         ...state,
         loading: false,
@@ -58,6 +71,12 @@ export default (state: RestaurantsState = initialState, action): RestaurantsStat
         restaurants: action.payload.data,
         totalItems: parseInt(action.payload.headers['x-total-count'], 10),
       };
+    case SUCCESS(ACTION_TYPES.FETCH_RESTAURANTS_NOT_PAGED):
+      return {
+        ...state,
+        loading: false,
+        restaurants: action.payload.data,
+      };
     case SUCCESS(ACTION_TYPES.CREATE_RESTAURANT):
       return {
         ...state,
@@ -76,6 +95,14 @@ export const getAllRestaurants = (page, size, sort) => {
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_RESTAURANTS,
+    payload: axios.get(requestUrl),
+  };
+};
+
+export const getAllRestaurantsNotPaged = () => {
+  const requestUrl = `${apiUrl}`;
+  return {
+    type: ACTION_TYPES.FETCH_RESTAURANTS_NOT_PAGED,
     payload: axios.get(requestUrl),
   };
 };

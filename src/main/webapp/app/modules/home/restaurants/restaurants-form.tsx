@@ -9,7 +9,7 @@ import { connect, useDispatch } from 'react-redux';
 import { RouteComponentProps, useHistory } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-interface IRestaurantForm {
+interface IRestaurantFormModel {
   restaurantName: string;
   city: string;
   street: string;
@@ -17,7 +17,7 @@ interface IRestaurantForm {
   description: string;
 }
 
-const defaultValues = (): IRestaurantForm => ({
+const defaultValues = (): IRestaurantFormModel => ({
   restaurantName: '',
   city: '',
   street: '',
@@ -34,9 +34,9 @@ const validationSchema = () =>
     description: Yup.string().required(),
   });
 
-interface IRestaurantsForm extends StateProps, DispatchProps, RouteComponentProps<{}> {}
+interface IRestaurantForm extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
-const RestaurantsForm = (props: IRestaurantsForm) => {
+const RestaurantsForm = (props: IRestaurantForm) => {
   const { updateSuccess } = props;
 
   const dispatch = useDispatch();
@@ -50,7 +50,7 @@ const RestaurantsForm = (props: IRestaurantsForm) => {
     dispatch(createRestaurant(values));
   };
 
-  const formik = useFormik<IRestaurantForm>({
+  const formik = useFormik<IRestaurantFormModel>({
     initialValues: defaultValues(),
     validationSchema: validationSchema(),
     onSubmit,
