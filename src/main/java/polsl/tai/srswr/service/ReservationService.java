@@ -32,10 +32,11 @@ public class ReservationService {
     @Transactional
     public ReservationDTO createReservation(ReservationDTO reservationDTO) {
         Restaurant restaurant = restaurantRepository
-            .findById(reservationDTO.getId())
+            .findById(reservationDTO.getRestaurant().getId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         Reservation reservation = new Reservation(reservationDTO, restaurant, getCurrentUserFromContext());
+        reservation.setRestaurant(restaurant);
         return new ReservationDTO(reservationRepository.save(reservation));
     }
 
