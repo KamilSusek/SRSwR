@@ -9,7 +9,7 @@ import { RouteComponentProps, useHistory } from 'react-router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { createReservation } from '../client-user/client-reservation.reducer';
+import { createReservation, reset } from '../client-user/client-reservation.reducer';
 
 interface IReservationFormModel {
   id?: number;
@@ -77,10 +77,14 @@ const ReservationForm = (props: IReservationForm) => {
   const goBack = () => {
     history.push('/');
   };
+
   useEffect(() => {
     if (props.updateSuccess) {
       goBack();
     }
+    return () => {
+      props.reset();
+    };
   }, [props.updateSuccess]);
 
   const restaurants = () => [
@@ -211,7 +215,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updateSuccess: storeState.clientReservations.updateSuccess,
 });
 
-const mapDispatchToProps = { getAllRestaurantsNotPaged, createReservation };
+const mapDispatchToProps = { getAllRestaurantsNotPaged, createReservation, reset };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

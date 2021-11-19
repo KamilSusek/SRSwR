@@ -55,5 +55,7 @@ public class Reservation {
         this.numberOfPlaces = reservationDTO.getNumberOfPlaces();
         this.tableNumber = reservationDTO.getTableNumber();
         this.notes = reservationDTO.getNotes();
+        this.setRestaurant(restaurant);
+        this.setOwner(owner);
     }
 }

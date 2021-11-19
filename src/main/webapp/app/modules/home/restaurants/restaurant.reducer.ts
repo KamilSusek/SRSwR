@@ -8,6 +8,7 @@ export const ACTION_TYPES = {
   FETCH_RESTAURANTS: 'restaurants/FETCH_RESTAURANTS',
   FETCH_RESTAURANTS_NOT_PAGED: 'restaurants/FETCH_RESTAURANTS_NOT_PAGED',
   CREATE_RESTAURANT: 'restaurants/CREATE_RESTAURANT',
+  RESET: 'restaurants/RESET',
 };
 
 const initialState = {
@@ -83,6 +84,10 @@ export default (state: RestaurantsState = initialState, action): RestaurantsStat
         updating: false,
         updateSuccess: true,
       };
+    case ACTION_TYPES.RESET:
+      return {
+        ...initialState,
+      };
     default:
       return state;
   }
@@ -114,3 +119,7 @@ export const createRestaurant: ICrudPutAction<Restaurant> = restaurant => async 
   });
   return result;
 };
+
+export const reset = () => ({
+  type: ACTION_TYPES.RESET,
+});

@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import { Container, Row, Col, Button } from 'reactstrap';
 import * as Yup from 'yup';
 import UIInpunt from 'app/shared/layout/input/input';
-import { createRestaurant } from './restaurant.reducer';
+import { createRestaurant, reset } from './restaurant.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect, useDispatch } from 'react-redux';
 import { RouteComponentProps, useHistory } from 'react-router';
@@ -60,6 +60,9 @@ const RestaurantsForm = (props: IRestaurantForm) => {
     if (updateSuccess) {
       goBack();
     }
+    return () => {
+      props.reset();
+    };
   }, [updateSuccess]);
 
   const { values, handleChange, errors, handleSubmit } = formik;
@@ -127,7 +130,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updateSuccess: storeState.restaurants.updateSuccess,
 });
 
-const mapDispatchToProps = { createRestaurant };
+const mapDispatchToProps = { createRestaurant, reset };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

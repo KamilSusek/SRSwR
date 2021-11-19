@@ -36,7 +36,6 @@ public class ReservationService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         Reservation reservation = new Reservation(reservationDTO, restaurant, getCurrentUserFromContext());
-        reservation.setRestaurant(restaurant);
         return new ReservationDTO(reservationRepository.save(reservation));
     }
 

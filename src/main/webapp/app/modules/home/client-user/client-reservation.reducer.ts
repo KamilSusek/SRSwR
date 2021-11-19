@@ -7,6 +7,7 @@ import { ICrudPutAction } from 'react-jhipster';
 export const ACTION_TYPES = {
   FETCH_RESERVATIONS: 'client-reservations/FETCH_RESERVATIONS',
   CREATE_RESERVATION: 'client-reservations/CREATE_RESERVATION',
+  RESET: 'client-reservations/RESET',
 };
 
 const initialState = {
@@ -61,6 +62,10 @@ export default (state: ClientReservationsState = initialState, action): ClientRe
         updateSuccess: true,
         reservation: action.payload.data,
       };
+    case ACTION_TYPES.RESET:
+      return {
+        ...initialState,
+      };
     default:
       return state;
   }
@@ -80,8 +85,12 @@ export const getAllReservations = (page, size, sort) => {
 
 export const createReservation: ICrudPutAction<Reservation> = reservation => async dispatch => {
   const result = await dispatch({
-    type: ACTION_TYPES.FETCH_RESERVATIONS,
+    type: ACTION_TYPES.CREATE_RESERVATION,
     payload: axios.post(apiUrl, reservation),
   });
   return result;
 };
+
+export const reset = () => ({
+  type: ACTION_TYPES.RESET,
+});
