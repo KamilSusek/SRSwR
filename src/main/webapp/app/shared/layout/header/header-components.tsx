@@ -23,13 +23,10 @@ export const Brand = props => (
   </NavbarBrand>
 );
 
-export const Home = props => (
+export const Reservations = props => (
   <NavItem>
     <NavLink tag={Link} to="/" className="d-flex align-items-center">
-      <FontAwesomeIcon icon="home" />
-      <span>
-        <Translate contentKey="global.menu.home">Home</Translate>
-      </span>
+      <span>Rezerwacje</span>
     </NavLink>
   </NavItem>
 );
@@ -46,6 +43,14 @@ export const AddReservation = props => (
   <NavItem>
     <NavLink tag={Link} to="/reservations/create" className="d-flex align-items-center">
       <span>Dodaj rezerwacje</span>
+    </NavLink>
+  </NavItem>
+);
+
+export const MyReservations = props => (
+  <NavItem>
+    <NavLink tag={Link} to="/my-reservations" className="d-flex align-items-center">
+      <span>Moje rezerwacje</span>
     </NavLink>
   </NavItem>
 );

@@ -8,12 +8,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { NavLink as Link } from 'react-router-dom';
 import LoadingBar from 'react-redux-loading-bar';
 
-import { Home, Brand, Restaurants, AddReservation } from './header-components';
+import { Reservations, Brand, Restaurants, AddReservation, MyReservations } from './header-components';
 import { AdminMenu, EntitiesMenu, AccountMenu, LocaleMenu } from '../menus';
 
 export interface IHeaderProps {
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isOwner: boolean;
+  isUser: boolean;
   ribbonEnv: string;
   isInProduction: boolean;
   isSwaggerEnabled: boolean;
@@ -41,9 +43,10 @@ const Header = (props: IHeaderProps) => {
         <NavbarToggler aria-label="Menu" onClick={toggleMenu} />
         <Collapse isOpen={menuOpen} navbar>
           <Nav id="header-tabs" className="ml-auto" navbar>
-            <Restaurants />
-            <AddReservation />
-            <Home />
+            {props.isOwner && <Restaurants />}
+            {props.isOwner && <AddReservation />}
+            {props.isUser && <MyReservations />}
+            <Reservations />
             <AccountMenu isAuthenticated={props.isAuthenticated} />
           </Nav>
         </Collapse>

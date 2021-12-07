@@ -37,6 +37,8 @@ export const App = (props: IAppProps) => {
           <Header
             isAuthenticated={props.isAuthenticated}
             isAdmin={props.isAdmin}
+            isOwner={props.isOwner}
+            isUser={props.isUser}
             currentLocale={props.currentLocale}
             onLocaleChange={props.setLocale}
             ribbonEnv={props.ribbonEnv}
@@ -45,9 +47,9 @@ export const App = (props: IAppProps) => {
           />
         </ErrorBoundary>
         <div className="container-fluid view-container" id="app-view-container">
-            <ErrorBoundary>
-              <AppRoutes />
-            </ErrorBoundary>
+          <ErrorBoundary>
+            <AppRoutes />
+          </ErrorBoundary>
           <Footer />
         </div>
       </div>
@@ -59,6 +61,8 @@ const mapStateToProps = ({ authentication, applicationProfile, locale }: IRootSt
   currentLocale: locale.currentLocale,
   isAuthenticated: authentication.isAuthenticated,
   isAdmin: hasAnyAuthority(authentication.account.authorities, [AUTHORITIES.ADMIN]),
+  isOwner: hasAnyAuthority(authentication.account.authorities, [AUTHORITIES.OWNER]),
+  isUser: hasAnyAuthority(authentication.account.authorities, [AUTHORITIES.USER]),
   ribbonEnv: applicationProfile.ribbonEnv,
   isInProduction: applicationProfile.inProduction,
   isSwaggerEnabled: applicationProfile.isSwaggerEnabled,
