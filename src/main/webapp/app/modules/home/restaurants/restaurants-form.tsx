@@ -3,13 +3,13 @@ import { useFormik } from 'formik';
 import { Container, Row, Col, Button } from 'reactstrap';
 import * as Yup from 'yup';
 import UIInpunt from 'app/shared/layout/input/input';
-import { createRestaurant } from './restaurant.reducer';
+import { createRestaurant, reset } from './restaurant.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect, useDispatch } from 'react-redux';
 import { RouteComponentProps, useHistory } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-interface IRestaurantForm {
+interface IRestaurantFormModel {
   restaurantName: string;
   city: string;
   street: string;
@@ -17,7 +17,7 @@ interface IRestaurantForm {
   description: string;
 }
 
-const defaultValues = (): IRestaurantForm => ({
+const defaultValues = (): IRestaurantFormModel => ({
   restaurantName: '',
   city: '',
   street: '',
@@ -34,9 +34,9 @@ const validationSchema = () =>
     description: Yup.string().required(),
   });
 
-interface IRestaurantsForm extends StateProps, DispatchProps, RouteComponentProps<{}> {}
+interface IRestaurantForm extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
-const RestaurantsForm = (props: IRestaurantsForm) => {
+const RestaurantsForm = (props: IRestaurantForm) => {
   const { updateSuccess } = props;
 
   const dispatch = useDispatch();
@@ -50,7 +50,7 @@ const RestaurantsForm = (props: IRestaurantsForm) => {
     dispatch(createRestaurant(values));
   };
 
-  const formik = useFormik<IRestaurantForm>({
+  const formik = useFormik<IRestaurantFormModel>({
     initialValues: defaultValues(),
     validationSchema: validationSchema(),
     onSubmit,
@@ -60,6 +60,9 @@ const RestaurantsForm = (props: IRestaurantsForm) => {
     if (updateSuccess) {
       goBack();
     }
+    return () => {
+      props.reset();
+    };
   }, [updateSuccess]);
 
   const { values, handleChange, errors, handleSubmit } = formik;
@@ -127,7 +130,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updateSuccess: storeState.restaurants.updateSuccess,
 });
 
-const mapDispatchToProps = { createRestaurant };
+const mapDispatchToProps = { createRestaurant, reset };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

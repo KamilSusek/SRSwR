@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { NavLink as Link } from 'react-router-dom';
 import LoadingBar from 'react-redux-loading-bar';
 
-import { Home, Brand, Restaurants } from './header-components';
+import { Home, Brand, Restaurants, AddReservation } from './header-components';
 import { AdminMenu, EntitiesMenu, AccountMenu, LocaleMenu } from '../menus';
 
 export interface IHeaderProps {
@@ -42,6 +42,7 @@ const Header = (props: IHeaderProps) => {
         <Collapse isOpen={menuOpen} navbar>
           <Nav id="header-tabs" className="ml-auto" navbar>
             <Restaurants />
+            <AddReservation />
             <Home />
             <AccountMenu isAuthenticated={props.isAuthenticated} />
           </Nav>

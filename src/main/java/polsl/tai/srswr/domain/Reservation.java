@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.RandomStringUtils;
+import polsl.tai.srswr.service.dto.ReservationDTO;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -46,4 +48,14 @@ public class Reservation {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
+    public Reservation(ReservationDTO reservationDTO, Restaurant restaurant, User owner) {
+        this.reservationCode = RandomStringUtils.random(10);
+        this.reservationStart = reservationDTO.getReservationStart();
+        this.reservationEnd = reservationDTO.getReservationEnd();
+        this.numberOfPlaces = reservationDTO.getNumberOfPlaces();
+        this.tableNumber = reservationDTO.getTableNumber();
+        this.notes = reservationDTO.getNotes();
+        this.setRestaurant(restaurant);
+        this.setOwner(owner);
+    }
 }

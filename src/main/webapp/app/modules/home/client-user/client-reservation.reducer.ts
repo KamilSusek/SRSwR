@@ -1,15 +1,22 @@
 import axios from 'axios';
 
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
+import { Reservation } from '../../../shared/model/reservation.model';
+import { ICrudPutAction } from 'react-jhipster';
 
 export const ACTION_TYPES = {
   FETCH_RESERVATIONS: 'client-reservations/FETCH_RESERVATIONS',
+  CREATE_RESERVATION: 'client-reservations/CREATE_RESERVATION',
+  RESET: 'client-reservations/RESET',
 };
 
 const initialState = {
   loading: false,
   errorMessage: null,
+  updateSuccess: false,
+  updating: false,
   reservations: [],
+  reservation: null,
   totalItems: 0,
 };
 
@@ -25,10 +32,20 @@ export default (state: ClientReservationsState = initialState, action): ClientRe
         errorMessage: null,
         loading: true,
       };
+    case REQUEST(ACTION_TYPES.CREATE_RESERVATION):
+      return {
+        ...state,
+        errorMessage: null,
+        updateSuccess: false,
+        updating: true,
+      };
     case FAILURE(ACTION_TYPES.FETCH_RESERVATIONS):
+    case FAILURE(ACTION_TYPES.CREATE_RESERVATION):
       return {
         ...state,
         loading: false,
+        updating: false,
+        updateSuccess: false,
         errorMessage: action.payload,
       };
     case SUCCESS(ACTION_TYPES.FETCH_RESERVATIONS):
@@ -38,12 +55,25 @@ export default (state: ClientReservationsState = initialState, action): ClientRe
         reservations: action.payload.data,
         totalItems: parseInt(action.payload.headers['x-total-count'], 10),
       };
+    case SUCCESS(ACTION_TYPES.CREATE_RESERVATION):
+      return {
+        ...state,
+        updating: false,
+        updateSuccess: true,
+        reservation: action.payload.data,
+      };
+    case ACTION_TYPES.RESET:
+      return {
+        ...initialState,
+      };
     default:
       return state;
   }
 };
 
 // Actions
+
+const apiUrl = 'api/reservations';
 
 export const getAllReservations = (page, size, sort) => {
   const requestUrl = `api/not-assigned/reservations${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
@@ -52,3 +82,15 @@ export const getAllReservations = (page, size, sort) => {
     payload: axios.get(requestUrl),
   };
 };
+
+export const createReservation: ICrudPutAction<Reservation> = reservation => async dispatch => {
+  const result = await dispatch({
+    type: ACTION_TYPES.CREATE_RESERVATION,
+    payload: axios.post(apiUrl, reservation),
+  });
+  return result;
+};
+
+export const reset = () => ({
+  type: ACTION_TYPES.RESET,
+});
