@@ -1,7 +1,7 @@
 import { Reservation } from 'app/shared/model/reservation.model';
 import { Container, Col, Row, Input, Label, Button } from 'reactstrap';
 import React from 'react';
-import { convertDateTimeFromServer, extractDate, extractTime } from '../../../shared/util/date-utils';
+import { extractDate, extractTime } from '../../../shared/util/date-utils';
 import { useDispatch } from 'react-redux';
 
 export interface IButtonAction {
@@ -9,9 +9,14 @@ export interface IButtonAction {
   title: string;
 }
 
+export interface ReservationActions {
+  details?: (id: number) => void;
+  assign?: (code: string) => void;
+}
+
 interface IReservationListItem {
   data: Reservation;
-  listItemActions: any;
+  listItemActions: ReservationActions;
 }
 
 const ReservationListItem = (props: IReservationListItem) => {

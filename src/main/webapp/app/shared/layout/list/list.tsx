@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Container, ListGroup, ListGroupItem, Alert, Row, Spinner } from 'reactstrap';
 import { IPaginationBaseState, JhiItemCount, JhiPagination } from 'react-jhipster/lib/src/component';
 
-interface IListComponent<Data> {
+interface IListComponent<Data, ItemActions> {
   fetch?: () => void;
   data: Data[];
   ListItem: ({ data: Data, listItemActions: any }) => JSX.Element;
@@ -13,10 +13,10 @@ interface IListComponent<Data> {
   ActionButton?: JSX.Element;
   title: string;
   loading: boolean;
-  listItemActions?: any;
+  listItemActions?: ItemActions;
 }
 
-const UIListComponent = <Data extends unknown>(props: IListComponent<Data>) => {
+const UIListComponent = <Data extends unknown, ItemActions extends unknown>(props: IListComponent<Data, ItemActions>) => {
   const { data, ListItem, FilterElement, ActionButton, pagination, listItemActions, handlePagination, loading } = props;
   useEffect(() => {
     props.fetch && props.fetch();

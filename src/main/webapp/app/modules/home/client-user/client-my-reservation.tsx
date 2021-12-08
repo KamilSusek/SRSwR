@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Reservation } from 'app/shared/model/reservation.model';
-import ReservationListItem from '../reservations/reservation-list-item';
+import ReservationListItem, { ReservationActions } from '../reservations/reservation-list-item';
 import ReservationFilters from './filters/reservation-filters';
 import { IRootState } from 'app/shared/reducers';
 import { getAllMyReservations } from './client-reservation.reducer';
@@ -59,7 +59,7 @@ const ClientMyReservations = (props: IClientReservation) => {
     });
 
   return (
-    <UIListComponent<Reservation>
+    <UIListComponent<Reservation, ReservationActions>
       title="Moje rezerwacje"
       data={props.reservations}
       FilterElement={ReservationFilters}
