@@ -1,21 +1,23 @@
 import React, { useEffect } from 'react';
-import { Container, ListGroup, ListGroupItem, Alert, Row } from 'reactstrap';
+import { Container, ListGroup, ListGroupItem, Alert, Row, Spinner } from 'reactstrap';
 import { IPaginationBaseState, JhiItemCount, JhiPagination } from 'react-jhipster/lib/src/component';
 
 interface IListComponent<Data> {
   fetch?: () => void;
   data: Data[];
-  ListItem: ({ data: Data }) => JSX.Element;
+  ListItem: ({ data: Data, listItemActions: any }) => JSX.Element;
   FilterElement?: (props: any) => JSX.Element;
   pagination: IPaginationBaseState;
   totalItems: number;
   handlePagination: (currentPage: number) => void;
   ActionButton?: JSX.Element;
   title: string;
+  loading: boolean;
+  listItemActions?: any;
 }
 
 const UIListComponent = <Data extends unknown>(props: IListComponent<Data>) => {
-  const { data, ListItem, FilterElement, ActionButton, pagination, handlePagination } = props;
+  const { data, ListItem, FilterElement, ActionButton, pagination, listItemActions, handlePagination, loading } = props;
   useEffect(() => {
     props.fetch && props.fetch();
   }, [props.fetch]);
@@ -27,17 +29,17 @@ const UIListComponent = <Data extends unknown>(props: IListComponent<Data>) => {
         {ActionButton && ActionButton}
       </Row>
       {FilterElement && <FilterElement />}
-      <ListGroup className="mt-2 align-items-center">
+      {loading ? <Spinner />: <ListGroup className="mt-2 align-items-center">
         {data.length > 0 ? (
           data.map((item, index) => (
             <ListGroupItem key={index} className="d-flex flex-column justify-center align-items-center">
-              <ListItem data={item} />
+              <ListItem data={item} listItemActions={listItemActions}/>
             </ListGroupItem>
           ))
         ) : (
           <Alert color="danger">Brak danych.</Alert>
         )}
-      </ListGroup>
+      </ListGroup>}
       {props.totalItems ? (
         <div className={data && data.length > 0 ? '' : 'd-none'}>
           <Row className="justify-content-center">

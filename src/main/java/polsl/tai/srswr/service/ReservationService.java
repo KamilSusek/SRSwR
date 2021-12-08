@@ -39,6 +39,18 @@ public class ReservationService {
         return new ReservationDTO(reservationRepository.save(reservation));
     }
 
+    @Transactional
+    public void assignReservation(String code) {
+        Reservation reservation = reservationRepository
+            .findByReservationCode(code)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if(reservation.getClient() != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+        User user = getCurrentUserFromContext();
+        reservation.setClient(user);
+    }
+
     public Optional<ReservationDTO> updateReservation(ReservationDTO reservationDTO) {
         return Optional.of(reservationRepository.save(new Reservation())).map(ReservationDTO::new);
     }
@@ -46,6 +58,12 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public Page<ReservationDTO> getAllReservations(Pageable pageable) {
         return reservationRepository.findAll(pageable).map(ReservationDTO::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ReservationDTO> getAllMyReservations(Pageable pageable) {
+        User currentUserFromContext = getCurrentUserFromContext();
+        return reservationRepository.findAllByClient(pageable, currentUserFromContext).map(ReservationDTO::new);
     }
 
     @Transactional(readOnly = true)

@@ -8,11 +8,19 @@ import polsl.tai.srswr.domain.Reservation;
 import polsl.tai.srswr.domain.User;
 import polsl.tai.srswr.service.dto.ReservationDTO;
 
+import java.util.Optional;
+
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     Page<Reservation> findAll(Pageable pageable);
 
+    Optional<Reservation> findById(Long id);
+
+    Optional<Reservation> findByReservationCode(String reservationCode);
+
     Page<Reservation> findAllByClientIsNull(Pageable pageable);
+
+    Page<Reservation> findAllByClient(Pageable pageable, User client);
 
 }

@@ -2,6 +2,7 @@ import { Reservation } from 'app/shared/model/reservation.model';
 import { Container, Col, Row, Input, Label, Button } from 'reactstrap';
 import React from 'react';
 import { convertDateTimeFromServer, extractDate, extractTime } from '../../../shared/util/date-utils';
+import { useDispatch } from 'react-redux';
 
 export interface IButtonAction {
   action: () => void;
@@ -10,22 +11,36 @@ export interface IButtonAction {
 
 interface IReservationListItem {
   data: Reservation;
+  listItemActions: any;
 }
 
 const ReservationListItem = (props: IReservationListItem) => {
-  const { restaurant, reservationCode, numberOfPlaces, tableNumber, reservationStart, reservationEnd } = props.data;
+  const { restaurant, id, reservationCode, numberOfPlaces, tableNumber, reservationStart, reservationEnd } = props.data;
+  const dispatch = useDispatch();
+  const renderDetailsButton = () =>
+    props.listItemActions && props.listItemActions.details ? (
+      <Button className="w-100" size="sm" onClick={() => {}}>
+        Szczegóły
+      </Button>
+    ) : (
+      <></>
+    );
 
-  const renderDetailsButton = () => (
-    <Button className="w-100" size="sm" onClick={() => {}}>
-      Szczegóły
-    </Button>
-  );
-
-  const renderActionButton = () => (
-    <Button className="w-100" size="sm" color="success" onClick={() => {}}>
-      Rezerwuj
-    </Button>
-  );
+  const renderActionButton = () =>
+    props.listItemActions && props.listItemActions.assign ? (
+      <Button
+        className="w-100"
+        size="sm"
+        color="success"
+        onClick={() => {
+          dispatch(props.listItemActions.assign(reservationCode));
+        }}
+      >
+        Rezerwuj
+      </Button>
+    ) : (
+      <></>
+    );
 
   return (
     <Container className="m-1 d-flex flex-column">
