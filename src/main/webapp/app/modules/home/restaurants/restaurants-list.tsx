@@ -78,6 +78,7 @@ const RestaurantsList = (props: IRestaurantsList) => {
         handlePagination={handlePagination}
         totalItems={props.totalItems}
         pagination={pagination}
+        loading={props.loading}
       />
     </>
   );
@@ -86,6 +87,7 @@ const RestaurantsList = (props: IRestaurantsList) => {
 const mapStateToProps = (storeState: IRootState) => ({
   restaurants: storeState.restaurants.restaurants,
   totalItems: storeState.restaurants.totalItems,
+  loading: storeState.restaurants.loading,
 });
 
 const mapDispatchToProps = { getAllRestaurants };
