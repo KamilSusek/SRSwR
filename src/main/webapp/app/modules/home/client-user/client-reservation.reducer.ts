@@ -6,6 +6,7 @@ import { ICrudPutAction } from 'react-jhipster';
 
 export const ACTION_TYPES = {
   FETCH_RESERVATIONS: 'client-reservations/FETCH_RESERVATIONS',
+  FETCH_SINGLE_RESERVATION: 'client-reservations/FETCH_SINGLE_RESERVATION',
   FETCH_MY_RESERVATIONS: 'client-reservations/FETCH_MY_RESERVATIONS',
   CREATE_RESERVATION: 'client-reservations/CREATE_RESERVATION',
   ASSIGN_RESTAURANT: 'client-reservations/ASSIGN_RESTAURANT',
@@ -30,6 +31,12 @@ export type ClientReservationsState = Readonly<typeof initialState>;
 
 export default (state: ClientReservationsState = initialState, action): ClientReservationsState => {
   switch (action.type) {
+    case REQUEST(ACTION_TYPES.FETCH_SINGLE_RESERVATION):
+      return {
+        ...state,
+        errorMessage: null,
+        loading: true,
+      };
     case REQUEST(ACTION_TYPES.FETCH_RESERVATIONS):
       return {
         ...state,
@@ -56,6 +63,7 @@ export default (state: ClientReservationsState = initialState, action): ClientRe
         updateSuccess: false,
         updating: true,
       };
+    case FAILURE(ACTION_TYPES.FETCH_SINGLE_RESERVATION):
     case FAILURE(ACTION_TYPES.FETCH_RESERVATIONS):
     case FAILURE(ACTION_TYPES.FETCH_MY_RESERVATIONS):
     case FAILURE(ACTION_TYPES.CREATE_RESERVATION):
@@ -73,6 +81,12 @@ export default (state: ClientReservationsState = initialState, action): ClientRe
         updating: false,
         updateSuccess: false,
         errorMessage: action.payload,
+      };
+    case SUCCESS(ACTION_TYPES.FETCH_SINGLE_RESERVATION):
+      return {
+        ...state,
+        loading: false,
+        reservation: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.FETCH_RESERVATIONS):
       return {
@@ -113,6 +127,14 @@ export default (state: ClientReservationsState = initialState, action): ClientRe
 // Actions
 
 const apiUrl = 'api/reservations';
+
+export const getReservation = (id: number) => {
+  const requestUrl = `${apiUrl}/${id}`;
+  return {
+    type: ACTION_TYPES.FETCH_SINGLE_RESERVATION,
+    payload: axios.get(requestUrl),
+  };
+};
 
 export const getAllReservations = (page, size, sort) => {
   const requestUrl = `api/not-assigned/reservations${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;

@@ -8,6 +8,7 @@ import { IRootState } from 'app/shared/reducers';
 import { connect, useDispatch } from 'react-redux';
 import { RouteComponentProps, useHistory } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FIELD_REQUIRED } from 'app/shared/error/validation-errors';
 
 interface IRestaurantFormModel {
   restaurantName: string;
@@ -27,11 +28,10 @@ const defaultValues = (): IRestaurantFormModel => ({
 
 const validationSchema = () =>
   Yup.object({
-    restaurantName: Yup.string().required(),
-    city: Yup.string().required(),
-    street: Yup.string().required(),
-    postalCode: Yup.string().required(),
-    description: Yup.string().required(),
+    restaurantName: Yup.string().required(FIELD_REQUIRED),
+    city: Yup.string().required(FIELD_REQUIRED),
+    street: Yup.string().required(FIELD_REQUIRED),
+    postalCode: Yup.string().required(FIELD_REQUIRED)
   });
 
 interface IRestaurantForm extends StateProps, DispatchProps, RouteComponentProps<{}> {}
@@ -51,6 +51,7 @@ const RestaurantsForm = (props: IRestaurantForm) => {
   };
 
   const formik = useFormik<IRestaurantFormModel>({
+    validateOnChange: false,
     initialValues: defaultValues(),
     validationSchema: validationSchema(),
     onSubmit,
@@ -65,7 +66,7 @@ const RestaurantsForm = (props: IRestaurantForm) => {
     };
   }, [updateSuccess]);
 
-  const { values, handleChange, errors, handleSubmit } = formik;
+  const { values, handleChange, errors } = formik;
 
   return (
     <Container style={{ width: '66vw' }} className="d-flex w-66 flex-column justify-center card" fluid>

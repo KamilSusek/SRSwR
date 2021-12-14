@@ -10,14 +10,14 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { createReservation, reset } from '../client-user/client-reservation.reducer';
+import { FIELD_REQUIRED } from 'app/shared/error/validation-errors';
 
 interface IReservationFormModel {
   id?: number;
   reservationCode?: string;
   restaurant: Restaurant | null;
-  reservationStartDate: string;
+  reservationDate: string;
   reservationStartTime: string;
-  reservationEndDate: string;
   reservationEndTime: string;
   numberOfPlaces: number | null;
   tableNumber?: number | null;
@@ -27,8 +27,7 @@ interface IReservationFormModel {
 const initialValues = (): IReservationFormModel => ({
   restaurant: null,
   reservationStartTime: '',
-  reservationStartDate: '',
-  reservationEndDate: '',
+  reservationDate: '',
   reservationEndTime: '',
   numberOfPlaces: null,
   tableNumber: null,
@@ -37,25 +36,22 @@ const initialValues = (): IReservationFormModel => ({
 
 const validationSchema = () =>
   Yup.object({
-    restaurant: Yup.object().required(),
-    reservationStartTime: Yup.string().required(),
-    reservationStartDate: Yup.string().required(),
-    reservationEndDate: Yup.string().required(),
-    reservationEndTime: Yup.string().required(),
-    numberOfPlaces: Yup.number().required(),
-    tableNumber: Yup.number().required(),
-    notes: Yup.string().required(),
+    restaurant: Yup.object().required(FIELD_REQUIRED).nullable(),
+    reservationStartTime: Yup.string().required(FIELD_REQUIRED),
+    reservationDate: Yup.string().required(FIELD_REQUIRED),
+    reservationEndTime: Yup.string().required(FIELD_REQUIRED),
+    numberOfPlaces: Yup.number().required(FIELD_REQUIRED).nullable(),
+    tableNumber: Yup.number().required(FIELD_REQUIRED).nullable()
   });
 
 interface IReservationForm extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 const ReservationForm = (props: IReservationForm) => {
   const mapValuesToResponse = (values: IReservationFormModel) => ({
-    reservationStart: `${values.reservationStartDate}T${values.reservationStartTime}:00Z`,
-    reservationEnd: `${values.reservationEndDate}T${values.reservationEndTime}:00Z`,
+    reservationStart: `${values.reservationDate}T${values.reservationStartTime}:00Z`,
+    reservationEnd: `${values.reservationDate}T${values.reservationEndTime}:00Z`,
     ...values,
   });
-
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -63,8 +59,9 @@ const ReservationForm = (props: IReservationForm) => {
   const onSubmit = values => {
     dispatch(props.createReservation(mapValuesToResponse(values)));
   };
-  
+
   const formik = useFormik<IReservationFormModel>({
+    validateOnChange: false,
     initialValues: initialValues(),
     validationSchema: validationSchema(),
     onSubmit,
@@ -117,42 +114,32 @@ const ReservationForm = (props: IReservationForm) => {
         </Button>
       </Row>
       <Row>
-        <Col xs="12" md="4">
+        <Col xs="12" md="6">
           <UIInpunt
             type="date"
-            name="reservationStartDate"
-            value={values.reservationStartDate}
-            label="Początek rezerwacji"
+            name="reservationDate"
+            value={values.reservationDate}
+            label="Data rezerwacji"
             onChange={handleChange}
-            error={errors.reservationStartDate}
+            error={errors.reservationDate}
           />
         </Col>
-        <Col xs="12" md="2">
+        <Col xs="12" md="3">
           <UIInpunt
             type="time"
             name="reservationStartTime"
             value={values.reservationStartTime}
-            label="Godzina"
+            label="Początek"
             onChange={handleChange}
             error={errors.reservationStartTime}
           />
         </Col>
-        <Col xs="12" md="4">
-          <UIInpunt
-            type="date"
-            name="reservationEndDate"
-            value={values.reservationEndDate}
-            label="Koniec rezerwacji"
-            onChange={handleChange}
-            error={errors.reservationEndDate}
-          />
-        </Col>
-        <Col xs="12" md="2">
+        <Col xs="12" md="3">
           <UIInpunt
             type="time"
             name="reservationEndTime"
             value={values.reservationEndTime}
-            label="Godzina"
+            label="Koniec"
             onChange={handleChange}
             error={errors.reservationEndTime}
           />

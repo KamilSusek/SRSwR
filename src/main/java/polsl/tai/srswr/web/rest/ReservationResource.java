@@ -63,11 +63,6 @@ public class ReservationResource {
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<ReservationDTO> updateReservation(@Valid @RequestBody ReservationDTO reservationDTO) {
         log.debug("REST request to update Reservation : {}", reservationDTO);
-        /*TODO plucie sie jak cos jest zle
-         *
-         *
-         *
-         */
         Optional<ReservationDTO> updateReservation = reservationService.updateReservation(reservationDTO);
 
         return ResponseUtil.wrapOrNotFound(updateReservation,
@@ -97,12 +92,11 @@ public class ReservationResource {
     }
 
 
-    @GetMapping("/reservations/{id}:" + Constants.LOGIN_REGEX + "}")
+    @GetMapping("/reservations/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "," + AuthoritiesConstants.OWNER + "\")")
     public ResponseEntity<ReservationDTO> getReservation(@PathVariable String id) {
         log.debug("REST request to get Reservation : {}", id);
-        return ResponseUtil.wrapOrNotFound(
-            reservationService.getReservation(Long.valueOf(id))
-                .map(ReservationDTO::new));
+        return ResponseUtil.wrapOrNotFound(reservationService.getReservation(Long.valueOf(id)).map(ReservationDTO::new));
     }
 
     @DeleteMapping("/reservations/{id}:" + Constants.LOGIN_REGEX + "}")

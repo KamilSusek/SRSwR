@@ -1,5 +1,7 @@
 package polsl.tai.srswr.security;
 
+import java.util.Set;
+
 /**
  * Constants for Spring Security authorities.
  */

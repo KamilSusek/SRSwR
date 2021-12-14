@@ -11,11 +11,15 @@ import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-u
 import { getSortState } from 'react-jhipster';
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 import { toast } from 'react-toastify';
+import { hasAnyAuthority } from 'app/shared/auth/private-route';
+import { AUTHORITIES } from 'app/config/constants';
+import { useHistory } from 'react-router';
 
 interface IClientReservation extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 const ClientReservation = (props: IClientReservation) => {
   const { updating, updateSuccess } = props;
+  const history = useHistory();
   const [pagination, setPagination] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
@@ -67,6 +71,12 @@ const ClientReservation = (props: IClientReservation) => {
       activePage: currentPage,
     });
 
+  const fetchSingleReservation = (id: number) => {
+    history.push(`/reservation/${id}`);
+  };
+
+  const actions = props.isOwner ? {} : props.isUser ? { assign: assignReservation, details: fetchSingleReservation } : {};
+
   return (
     <UIListComponent<Reservation, ReservationActions>
       title="Wszystkie rezerwacje"
@@ -74,7 +84,7 @@ const ClientReservation = (props: IClientReservation) => {
       FilterElement={ReservationFilters}
       ListItem={ReservationListItem}
       handlePagination={handlePagination}
-      listItemActions={{ assign: assignReservation }}
+      listItemActions={actions}
       totalItems={props.totalItems}
       pagination={pagination}
       loading={props.fetching}
@@ -88,6 +98,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   fetching: storeState.clientReservations.loading,
   updateSuccess: storeState.clientReservations.updateSuccess,
   updating: storeState.clientReservations.updating,
+  isUser: hasAnyAuthority(storeState.authentication.account.authorities, [AUTHORITIES.USER]),
+  isOwner: hasAnyAuthority(storeState.authentication.account.authorities, [AUTHORITIES.OWNER]),
 });
 
 const mapDispatchToProps = { getAllReservations, assignReservation };

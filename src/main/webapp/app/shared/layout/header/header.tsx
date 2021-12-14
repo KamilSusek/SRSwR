@@ -46,7 +46,7 @@ const Header = (props: IHeaderProps) => {
             {props.isOwner && <Restaurants />}
             {props.isOwner && <AddReservation />}
             {props.isUser && <MyReservations />}
-            <Reservations />
+            {props.isAuthenticated && <Reservations />}
             <AccountMenu isAuthenticated={props.isAuthenticated} />
           </Nav>
         </Collapse>

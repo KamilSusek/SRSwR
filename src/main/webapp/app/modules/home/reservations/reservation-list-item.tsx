@@ -24,7 +24,13 @@ const ReservationListItem = (props: IReservationListItem) => {
   const dispatch = useDispatch();
   const renderDetailsButton = () =>
     props.listItemActions && props.listItemActions.details ? (
-      <Button className="w-100" size="sm" onClick={() => {}}>
+      <Button
+        className="w-100"
+        size="sm"
+        onClick={() => {
+          props.listItemActions.details(id);
+        }}
+      >
         Szczegóły
       </Button>
     ) : (

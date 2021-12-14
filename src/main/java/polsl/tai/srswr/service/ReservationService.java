@@ -16,6 +16,8 @@ import polsl.tai.srswr.domain.User;
 import polsl.tai.srswr.repository.ReservationRepository;
 import polsl.tai.srswr.repository.RestaurantRepository;
 import polsl.tai.srswr.repository.UserRepository;
+import polsl.tai.srswr.security.AuthoritiesConstants;
+import polsl.tai.srswr.security.SecurityUtils;
 import polsl.tai.srswr.service.dto.ReservationDTO;
 import polsl.tai.srswr.service.dto.UserDTO;
 
@@ -44,7 +46,7 @@ public class ReservationService {
         Reservation reservation = reservationRepository
             .findByReservationCode(code)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if(reservation.getClient() != null) {
+        if (reservation.getClient() != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
         User user = getCurrentUserFromContext();
@@ -71,8 +73,15 @@ public class ReservationService {
         return reservationRepository.findAllByClientIsNull(pageable).map(ReservationDTO::new);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Reservation> getReservation(Long id) {
-        return reservationRepository.findById(id);
+        User user = getCurrentUserFromContext();
+        if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.USER)) {
+            return reservationRepository.findByIdAndClient(id, user);
+        } else if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.OWNER)) {
+            return reservationRepository.findByIdAndOwner(id, user);
+        }
+        return Optional.empty();
     }
 
     public void deleteReservation(Long id) {
