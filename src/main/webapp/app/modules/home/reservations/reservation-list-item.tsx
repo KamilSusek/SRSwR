@@ -11,7 +11,9 @@ export interface IButtonAction {
 
 export interface ReservationActions {
   details?: (id: number) => void;
+  delete?: (id: number) => void;
   assign?: (code: string) => void;
+  cancel?: (code: string) => void;
 }
 
 interface IReservationListItem {
@@ -22,6 +24,7 @@ interface IReservationListItem {
 const ReservationListItem = (props: IReservationListItem) => {
   const { restaurant, id, reservationCode, numberOfPlaces, tableNumber, reservationStart, reservationEnd } = props.data;
   const dispatch = useDispatch();
+
   const renderDetailsButton = () =>
     props.listItemActions && props.listItemActions.details ? (
       <Button
@@ -48,6 +51,40 @@ const ReservationListItem = (props: IReservationListItem) => {
         }}
       >
         Rezerwuj
+      </Button>
+    ) : (
+      <></>
+    );
+
+  const renderCancelButton = () =>
+    props.listItemActions && props.listItemActions.cancel ? (
+      <Button
+        className="w-100"
+        size="sm"
+        color="danger"
+        outline
+        onClick={() => {
+          dispatch(props.listItemActions.cancel(reservationCode));
+        }}
+      >
+        Anuluj
+      </Button>
+    ) : (
+      <></>
+    );
+
+    const renderDeleteButton = () =>
+    props.listItemActions && props.listItemActions.delete ? (
+      <Button
+        className="w-100"
+        size="sm"
+        color="danger"
+        outline
+        onClick={() => {
+          dispatch(props.listItemActions.delete(id));
+        }}
+      >
+        Usuń
       </Button>
     ) : (
       <></>
@@ -126,6 +163,8 @@ const ReservationListItem = (props: IReservationListItem) => {
         <Col xs="12" md="6" className="mt-1">
           {renderActionButton()}
         </Col>
+        {renderCancelButton()}
+        {renderDeleteButton()}
       </Row>
     </Container>
   );

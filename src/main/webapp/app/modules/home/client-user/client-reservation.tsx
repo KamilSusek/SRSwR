@@ -3,7 +3,7 @@ import { Reservation } from 'app/shared/model/reservation.model';
 import ReservationListItem, { ReservationActions } from '../reservations/reservation-list-item';
 import ReservationFilters from './filters/reservation-filters';
 import { IRootState } from 'app/shared/reducers';
-import { getAllReservations, assignReservation } from './client-reservation.reducer';
+import { getAllReservations, assignReservation, deleteReservation, getAllOwnerReservations } from './client-reservation.reducer';
 import UIListComponent from '../../../shared/layout/list/list';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -18,13 +18,13 @@ import { useHistory } from 'react-router';
 interface IClientReservation extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 const ClientReservation = (props: IClientReservation) => {
-  const { updating, updateSuccess } = props;
+  const { updating, updateSuccess, deleting, deleteSuccess } = props;
   const history = useHistory();
   const [pagination, setPagination] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
 
-  const fetchReservations = () => {
+  const fetchClientReservations = () => {
     props.getAllReservations(pagination.activePage - 1, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
     const endURL = `?page=${pagination.activePage}&sort=${pagination.sort},${pagination.order}`;
     if (props.location.search !== endURL) {
@@ -32,16 +32,35 @@ const ClientReservation = (props: IClientReservation) => {
     }
   };
 
+  const fetchOwnerReservations = () => {
+    props.getAllOwnerReservations(pagination.activePage - 1, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
+    const endURL = `?page=${pagination.activePage}&sort=${pagination.sort},${pagination.order}`;
+    if (props.location.search !== endURL) {
+      props.history.push(`${props.location.pathname}${endURL}`);
+    }
+  };
+
   useEffect(() => {
-    fetchReservations();
+    if (props.isUser) {
+      fetchClientReservations();
+    } else if (props.isOwner) {
+      fetchOwnerReservations();
+    }
   }, [pagination.activePage, pagination.order, pagination.sort]);
 
   useEffect(() => {
     if (updateSuccess) {
       toast.success('Pomyslnie dokonano rezerwacji.');
-      fetchReservations();
+      fetchClientReservations();
     }
   }, [updating, updateSuccess]);
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      toast.success('Pomyslnie usunieto rezerwację.');
+      fetchOwnerReservations();
+    }
+  }, [deleting, deleteSuccess]);
 
   useEffect(() => {
     const params = new URLSearchParams(props.location.search);
@@ -75,7 +94,11 @@ const ClientReservation = (props: IClientReservation) => {
     history.push(`/reservation/${id}`);
   };
 
-  const actions = props.isOwner ? {} : props.isUser ? { assign: assignReservation, details: fetchSingleReservation } : {};
+  const actions = props.isOwner
+    ? { delete: deleteReservation }
+    : props.isUser
+    ? { assign: assignReservation, details: fetchSingleReservation }
+    : {};
 
   return (
     <UIListComponent<Reservation, ReservationActions>
@@ -98,11 +121,13 @@ const mapStateToProps = (storeState: IRootState) => ({
   fetching: storeState.clientReservations.loading,
   updateSuccess: storeState.clientReservations.updateSuccess,
   updating: storeState.clientReservations.updating,
+  deleteSuccess: storeState.clientReservations.deleteSuccess,
+  deleting: storeState.clientReservations.deleting,
   isUser: hasAnyAuthority(storeState.authentication.account.authorities, [AUTHORITIES.USER]),
   isOwner: hasAnyAuthority(storeState.authentication.account.authorities, [AUTHORITIES.OWNER]),
 });
 
-const mapDispatchToProps = { getAllReservations, assignReservation };
+const mapDispatchToProps = { getAllReservations, assignReservation, deleteReservation, getAllOwnerReservations };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

@@ -21,6 +21,7 @@ import polsl.tai.srswr.security.SecurityUtils;
 import polsl.tai.srswr.service.dto.ReservationDTO;
 import polsl.tai.srswr.service.dto.UserDTO;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.stream.DoubleStream;
 
@@ -53,6 +54,17 @@ public class ReservationService {
         reservation.setClient(user);
     }
 
+    @Transactional
+    public void cancelReservation(String code) {
+        Reservation reservation = reservationRepository
+            .findByReservationCode(code)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (Instant.now().isAfter(reservation.getReservationStart())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        reservation.setClient(null);
+    }
+
     public Optional<ReservationDTO> updateReservation(ReservationDTO reservationDTO) {
         return Optional.of(reservationRepository.save(new Reservation())).map(ReservationDTO::new);
     }
@@ -60,6 +72,12 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public Page<ReservationDTO> getAllReservations(Pageable pageable) {
         return reservationRepository.findAll(pageable).map(ReservationDTO::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ReservationDTO> getAllOwnerReservations(Pageable pageable) {
+        User user = getCurrentUserFromContext();
+        return reservationRepository.findAllByOwner(pageable, user).map(ReservationDTO::new);
     }
 
     @Transactional(readOnly = true)
@@ -77,7 +95,7 @@ public class ReservationService {
     public Optional<Reservation> getReservation(Long id) {
         User user = getCurrentUserFromContext();
         if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.USER)) {
-            return reservationRepository.findByIdAndClient(id, user);
+            return reservationRepository.findById(id);
         } else if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.OWNER)) {
             return reservationRepository.findByIdAndOwner(id, user);
         }
@@ -85,6 +103,12 @@ public class ReservationService {
     }
 
     public void deleteReservation(Long id) {
+        User user = getCurrentUserFromContext();
+        Reservation reservation = reservationRepository.findByIdAndOwner(id, user)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (reservation.getClient() != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         reservationRepository.deleteById(id);
     }
 

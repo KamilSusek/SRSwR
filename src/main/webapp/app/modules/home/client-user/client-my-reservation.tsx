@@ -3,17 +3,19 @@ import { Reservation } from 'app/shared/model/reservation.model';
 import ReservationListItem, { ReservationActions } from '../reservations/reservation-list-item';
 import ReservationFilters from './filters/reservation-filters';
 import { IRootState } from 'app/shared/reducers';
-import { getAllMyReservations } from './client-reservation.reducer';
+import { getAllMyReservations, cancelReservation } from './client-reservation.reducer';
 import UIListComponent from '../../../shared/layout/list/list';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { getSortState } from 'react-jhipster';
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
+import { toast } from 'react-toastify';
 
 interface IClientReservation extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 const ClientMyReservations = (props: IClientReservation) => {
+  const { canceling, cancelSuccess } = props;
   const [pagination, setPagination] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
@@ -45,6 +47,13 @@ const ClientMyReservations = (props: IClientReservation) => {
     }
   }, [props.location.search]);
 
+  useEffect(() => {
+    if (cancelSuccess) {
+      toast.success('Pomyslnie anulowano rezerwacje.');
+      fetchReservations();
+    }
+  }, [canceling, cancelSuccess]);
+
   const sort = p => () =>
     setPagination({
       ...pagination,
@@ -64,6 +73,7 @@ const ClientMyReservations = (props: IClientReservation) => {
       data={props.reservations}
       FilterElement={ReservationFilters}
       ListItem={ReservationListItem}
+      listItemActions={{ cancel: cancelReservation }}
       handlePagination={handlePagination}
       totalItems={props.totalItems}
       pagination={pagination}
@@ -76,9 +86,11 @@ const mapStateToProps = (storeState: IRootState) => ({
   reservations: storeState.clientReservations.myReservations,
   totalItems: storeState.clientReservations.totalItemsMyReservation,
   fetching: storeState.clientReservations.loading,
+  cancelSuccess: storeState.clientReservations.cancelSuccess,
+  canceling: storeState.clientReservations.canceling,
 });
 
-const mapDispatchToProps = { getAllMyReservations };
+const mapDispatchToProps = { getAllMyReservations, cancelReservation };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

@@ -2,14 +2,17 @@ import axios from 'axios';
 
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { Reservation } from '../../../shared/model/reservation.model';
-import { ICrudPutAction } from 'react-jhipster';
+import { ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
+import { deleteUser } from '../../administration/user-management/user-management.reducer';
 
 export const ACTION_TYPES = {
   FETCH_RESERVATIONS: 'client-reservations/FETCH_RESERVATIONS',
   FETCH_SINGLE_RESERVATION: 'client-reservations/FETCH_SINGLE_RESERVATION',
   FETCH_MY_RESERVATIONS: 'client-reservations/FETCH_MY_RESERVATIONS',
+  CANCEL_RESERVATION: 'client-reservations/CANCEL_RESERVATION',
   CREATE_RESERVATION: 'client-reservations/CREATE_RESERVATION',
   ASSIGN_RESTAURANT: 'client-reservations/ASSIGN_RESTAURANT',
+  DELETE_RESTAURANT: 'client-reservations/DELETE_RESTAURANT',
   RESET: 'client-reservations/RESET',
 };
 
@@ -18,6 +21,10 @@ const initialState = {
   errorMessage: null,
   updateSuccess: false,
   updating: false,
+  cancelSuccess: false,
+  canceling: false,
+  deleteSuccess: false,
+  deleting: false,
   reservations: [],
   myReservations: [],
   reservation: null,
@@ -41,13 +48,26 @@ export default (state: ClientReservationsState = initialState, action): ClientRe
       return {
         ...state,
         errorMessage: null,
+        updateSuccess: false,
+        cancelSuccess: false,
+        deleteSuccess: false,
         loading: true,
       };
     case REQUEST(ACTION_TYPES.FETCH_MY_RESERVATIONS):
       return {
         ...state,
         errorMessage: null,
+        updateSuccess: false,
+        cancelSuccess: false,
+        deleteSuccess: false,
         loading: true,
+      };
+    case REQUEST(ACTION_TYPES.CANCEL_RESERVATION):
+      return {
+        ...state,
+        errorMessage: null,
+        cancelSuccess: false,
+        canceling: true,
       };
     case REQUEST(ACTION_TYPES.CREATE_RESERVATION):
       return {
@@ -63,6 +83,13 @@ export default (state: ClientReservationsState = initialState, action): ClientRe
         updateSuccess: false,
         updating: true,
       };
+    case REQUEST(ACTION_TYPES.DELETE_RESTAURANT):
+      return {
+        ...state,
+        errorMessage: null,
+        deleteSuccess: false,
+        deleting: true,
+      };
     case FAILURE(ACTION_TYPES.FETCH_SINGLE_RESERVATION):
     case FAILURE(ACTION_TYPES.FETCH_RESERVATIONS):
     case FAILURE(ACTION_TYPES.FETCH_MY_RESERVATIONS):
@@ -72,6 +99,15 @@ export default (state: ClientReservationsState = initialState, action): ClientRe
         loading: false,
         updating: false,
         updateSuccess: false,
+        cancelSuccess: false,
+        errorMessage: action.payload,
+      };
+    case FAILURE(ACTION_TYPES.CANCEL_RESERVATION):
+      return {
+        ...state,
+        loading: false,
+        canceling: false,
+        cancelSuccess: false,
         errorMessage: action.payload,
       };
     case FAILURE(ACTION_TYPES.ASSIGN_RESTAURANT):
@@ -80,6 +116,14 @@ export default (state: ClientReservationsState = initialState, action): ClientRe
         loading: false,
         updating: false,
         updateSuccess: false,
+        errorMessage: action.payload,
+      };
+    case FAILURE(ACTION_TYPES.DELETE_RESTAURANT):
+      return {
+        ...state,
+        loading: false,
+        deleting: false,
+        deleteSuccess: false,
         errorMessage: action.payload,
       };
     case SUCCESS(ACTION_TYPES.FETCH_SINGLE_RESERVATION):
@@ -109,11 +153,23 @@ export default (state: ClientReservationsState = initialState, action): ClientRe
         updateSuccess: true,
         reservation: action.payload.data,
       };
+    case SUCCESS(ACTION_TYPES.CANCEL_RESERVATION):
+      return {
+        ...state,
+        canceling: false,
+        cancelSuccess: true,
+      };
     case SUCCESS(ACTION_TYPES.ASSIGN_RESTAURANT):
       return {
         ...state,
         updating: false,
         updateSuccess: true,
+      };
+    case SUCCESS(ACTION_TYPES.DELETE_RESTAURANT):
+      return {
+        ...state,
+        deleting: false,
+        deleteSuccess: true,
       };
     case ACTION_TYPES.RESET:
       return {
@@ -144,12 +200,28 @@ export const getAllReservations = (page, size, sort) => {
   };
 };
 
+export const getAllOwnerReservations = (page, size, sort) => {
+  const requestUrl = `api/owner/reservations${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  return {
+    type: ACTION_TYPES.FETCH_RESERVATIONS,
+    payload: axios.get(requestUrl),
+  };
+};
+
 export const getAllMyReservations = (page, size, sort) => {
   const requestUrl = `api/my-reservations${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_MY_RESERVATIONS,
     payload: axios.get(requestUrl),
   };
+};
+
+export const cancelReservation: ICrudPutAction<string> = code => async dispatch => {
+  const result = await dispatch({
+    type: ACTION_TYPES.CANCEL_RESERVATION,
+    payload: axios.post(`${apiUrl}/cancel/${code}`),
+  });
+  return result;
 };
 
 export const createReservation: ICrudPutAction<Reservation> = reservation => async dispatch => {
@@ -164,6 +236,14 @@ export const assignReservation: ICrudPutAction<string> = code => async dispatch 
   const result = await dispatch({
     type: ACTION_TYPES.ASSIGN_RESTAURANT,
     payload: axios.post(`${apiUrl}/assign/${code}`),
+  });
+  return result;
+};
+
+export const deleteReservation: ICrudDeleteAction<void> = id => async dispatch => {
+  const result = await dispatch({
+    type: ACTION_TYPES.DELETE_RESTAURANT,
+    payload: axios.delete(`${apiUrl}/${id}`),
   });
   return result;
 };

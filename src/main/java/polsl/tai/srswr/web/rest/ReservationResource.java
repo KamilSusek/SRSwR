@@ -59,6 +59,14 @@ public class ReservationResource {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/reservations/cancel/{code}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.USER + "\")")
+    public ResponseEntity<?> cancelReservation(@PathVariable String code) throws URISyntaxException {
+        log.debug("REST request to assign Reservation : {}", code);
+        reservationService.cancelReservation(code);
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/reservations")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<ReservationDTO> updateReservation(@Valid @RequestBody ReservationDTO reservationDTO) {
@@ -69,9 +77,11 @@ public class ReservationResource {
             HeaderUtil.createAlert("aaa", "userManagement.updated", reservationDTO.getId().toString()));
     }
 
-    @GetMapping("/reservations")
-    public ResponseEntity<List<ReservationDTO>> getAllReservations(Pageable pageable) {
-        final Page<ReservationDTO> page = reservationService.getAllReservations(pageable);
+
+    @GetMapping("/owner/reservations")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.OWNER + "\")")
+    public ResponseEntity<List<ReservationDTO>> getAllOwnersReservations(Pageable pageable) {
+        final Page<ReservationDTO> page = reservationService.getAllOwnerReservations(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -91,7 +101,6 @@ public class ReservationResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
-
     @GetMapping("/reservations/{id}")
     @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "," + AuthoritiesConstants.OWNER + "\")")
     public ResponseEntity<ReservationDTO> getReservation(@PathVariable String id) {
@@ -99,11 +108,11 @@ public class ReservationResource {
         return ResponseUtil.wrapOrNotFound(reservationService.getReservation(Long.valueOf(id)).map(ReservationDTO::new));
     }
 
-    @DeleteMapping("/reservations/{id}:" + Constants.LOGIN_REGEX + "}")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @DeleteMapping("/reservations/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.OWNER + "\")")
     public ResponseEntity<Void> deleteReservation(@PathVariable String id) {
-        log.debug("REST request to delete Resservation: {}", id);
+        log.debug("REST request to delete Reservation: {}", id);
         reservationService.deleteReservation(Long.valueOf(id));
-        return ResponseEntity.noContent().headers(HeaderUtil.createAlert("aaa", "userManagement.deleted", id)).build();
+        return ResponseEntity.noContent().build();
     }
 }
