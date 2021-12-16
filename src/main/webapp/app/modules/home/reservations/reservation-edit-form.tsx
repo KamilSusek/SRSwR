@@ -57,6 +57,10 @@ const ReservationEditForm = (props: IReservationEditForm) => {
   useEffect(() => {
     props.getAllRestaurantsNotPaged();
   }, []);
+  
+  const goBack = () => {
+    history.push('/');
+  };
 
   useEffect(() => {
     if (props.updateSuccess) {
@@ -72,10 +76,6 @@ const ReservationEditForm = (props: IReservationEditForm) => {
       formik.setValues(mapReservationToFormValues(props.reservation));
     }
   }, [props.reservation, props.fetching]);
-
-  const goBack = () => {
-    history.push('/');
-  };
 
   const restaurants = () => [
     { id: 0, value: '', data: null },
