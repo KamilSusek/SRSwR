@@ -232,6 +232,14 @@ export const createReservation: ICrudPutAction<Reservation> = reservation => asy
   return result;
 };
 
+export const updateReservation: ICrudPutAction<Reservation> = reservation => async dispatch => {
+  const result = await dispatch({
+    type: ACTION_TYPES.CREATE_RESERVATION,
+    payload: axios.put(apiUrl, reservation),
+  });
+  return result;
+};
+
 export const assignReservation: ICrudPutAction<string> = code => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.ASSIGN_RESTAURANT,

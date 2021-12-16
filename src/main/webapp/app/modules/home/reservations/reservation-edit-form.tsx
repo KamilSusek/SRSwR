@@ -1,79 +1,62 @@
 import { Restaurant } from 'app/shared/model/restaurant.model';
 import React, { useEffect } from 'react';
-import { Container, Row, Col, option, Button } from 'reactstrap';
+import { Container, Row, Col, Button } from 'reactstrap';
 import UIInpunt from 'app/shared/layout/input/input';
 import { connect, useDispatch } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
 import { getAllRestaurantsNotPaged } from '../restaurants/restaurant.reducer';
-import { RouteComponentProps, useHistory } from 'react-router';
+import { RouteComponentProps, useHistory, useParams } from 'react-router';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { createReservation, reset } from '../client-user/client-reservation.reducer';
-import { FIELD_REQUIRED } from 'app/shared/error/validation-errors';
+import { reset, getReservation, updateReservation } from '../client-user/client-reservation.reducer';
+import { IReservationFormModel, validationSchema } from './reservation-form';
+import { Reservation } from '../../../shared/model/reservation.model';
+import { extractDate, extractTime } from '../../../shared/util/date-utils';
 
-export interface IReservationFormModel {
-  id?: number;
-  reservationCode?: string;
-  restaurant: Restaurant | null;
-  reservationDate: string;
-  reservationStartTime: string;
-  reservationEndTime: string;
-  numberOfPlaces: number | null;
-  tableNumber?: number | null;
-  notes: string;
-}
+interface IReservationEditForm extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
-export const initialValues = (): IReservationFormModel => ({
-  restaurant: null,
-  reservationStartTime: '',
-  reservationDate: '',
-  reservationEndTime: '',
-  numberOfPlaces: null,
-  tableNumber: null,
-  notes: '',
-});
-
-export const validationSchema = () =>
-  Yup.object({
-    restaurant: Yup.object().required(FIELD_REQUIRED).nullable(),
-    reservationStartTime: Yup.string().required(FIELD_REQUIRED),
-    reservationDate: Yup.string().required(FIELD_REQUIRED),
-    reservationEndTime: Yup.string().required(FIELD_REQUIRED),
-    numberOfPlaces: Yup.number().required(FIELD_REQUIRED).nullable(),
-    tableNumber: Yup.number().required(FIELD_REQUIRED).nullable()
-  });
-
-interface IReservationForm extends StateProps, DispatchProps, RouteComponentProps<{}> {}
-
-const ReservationForm = (props: IReservationForm) => {
+const ReservationEditForm = (props: IReservationEditForm) => {
   const mapValuesToResponse = (values: IReservationFormModel) => ({
     reservationStart: `${values.reservationDate}T${values.reservationStartTime}:00Z`,
     reservationEnd: `${values.reservationDate}T${values.reservationEndTime}:00Z`,
     ...values,
   });
 
+  const mapReservationToFormValues = (reservation: Reservation): IReservationFormModel => {
+    const { reservationStart, restaurant, notes, reservationEnd, numberOfPlaces, tableNumber } = reservation;
+    return {
+      reservationDate: extractDate(reservationStart),
+      reservationStartTime: extractTime(reservationStart),
+      reservationEndTime: extractTime(reservationEnd),
+      notes,
+      numberOfPlaces,
+      tableNumber,
+      restaurant,
+    };
+  };
+
   const dispatch = useDispatch();
   const history = useHistory();
+  const { id } = useParams();
 
   const onSubmit = values => {
-    dispatch(props.createReservation(mapValuesToResponse(values)));
+    dispatch(props.updateReservation({ id: props.reservation.id, ...mapValuesToResponse(values) }));
   };
 
   const formik = useFormik<IReservationFormModel>({
     validateOnChange: false,
-    initialValues: initialValues(),
+    initialValues: null,
     validationSchema: validationSchema(),
     onSubmit,
   });
 
   useEffect(() => {
-    props.getAllRestaurantsNotPaged();
+    props.getReservation(+id);
   }, []);
 
-  const goBack = () => {
-    history.push('/');
-  };
+  useEffect(() => {
+    props.getAllRestaurantsNotPaged();
+  }, []);
 
   useEffect(() => {
     if (props.updateSuccess) {
@@ -84,6 +67,16 @@ const ReservationForm = (props: IReservationForm) => {
     };
   }, [props.updateSuccess]);
 
+  useEffect(() => {
+    if (props.reservation) {
+      formik.setValues(mapReservationToFormValues(props.reservation));
+    }
+  }, [props.reservation, props.fetching]);
+
+  const goBack = () => {
+    history.push('/');
+  };
+
   const restaurants = () => [
     { id: 0, value: '', data: null },
     ...props.restaurants.map((item, index) => ({
@@ -93,8 +86,8 @@ const ReservationForm = (props: IReservationForm) => {
     })),
   ];
 
-  const handleRestaurantSelect = (id: number) => {
-    const restautrant = restaurants().filter(item => item.id === +id);
+  const handleRestaurantSelect = (restaurantId: number) => {
+    const restautrant = restaurants().filter(item => item.id === +restaurantId);
 
     if (restautrant.length > 0) {
       formik.setFieldValue('restaurant', restautrant[0].data);
@@ -105,10 +98,18 @@ const ReservationForm = (props: IReservationForm) => {
 
   const { values, handleChange, errors } = formik;
 
-  return (
+  const getRestarurantId = () => {
+    const restaurant = restaurants().filter(item => values.restaurant && values.restaurant.restaurantName === item.value);
+    if (restaurant.length > 0) {
+      return restaurant[0].id;
+    }
+    return 0;
+  };
+
+  return values ? (
     <Container style={{ width: '60vw' }} className="d-flex w-66 flex-column justify-center card" fluid>
       <Row className="d-flex justify-content-between align-items-center m-1">
-        <h1>Dodaj rezerwacje</h1>
+        <h1>Edytuj rezerwacje</h1>
         <Button onClick={goBack} color="danger">
           <FontAwesomeIcon icon="times" />
         </Button>
@@ -171,6 +172,7 @@ const ReservationForm = (props: IReservationForm) => {
             type="select"
             label="Restauracja"
             onChange={event => handleRestaurantSelect(event.target.value)}
+            value={getRestarurantId()}
             error={errors.restaurant}
           >
             {restaurants().map((item, index) => (
@@ -188,23 +190,27 @@ const ReservationForm = (props: IReservationForm) => {
       </Row>
       <Row>
         <Col xs="12" md="12">
-          <Button className="w-100" color="success" type="submit" onClick={formik.handleSubmit}>
-            Dodaj
+          <Button className="w-100" color="primary" type="submit" onClick={formik.handleSubmit}>
+            Edytuj
           </Button>
         </Col>
       </Row>
     </Container>
+  ) : (
+    <></>
   );
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
   restaurants: storeState.restaurants.restaurants,
+  reservation: storeState.clientReservations.reservation,
   updateSuccess: storeState.clientReservations.updateSuccess,
+  fetching: storeState.clientReservations.loading,
 });
 
-const mapDispatchToProps = { getAllRestaurantsNotPaged, createReservation, reset };
+const mapDispatchToProps = { getReservation, reset, getAllRestaurantsNotPaged, updateReservation };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReservationForm);
+export default connect(mapStateToProps, mapDispatchToProps)(ReservationEditForm);

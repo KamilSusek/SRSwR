@@ -68,7 +68,7 @@ public class ReservationResource {
     }
 
     @PutMapping("/reservations")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.OWNER + "\")")
     public ResponseEntity<ReservationDTO> updateReservation(@Valid @RequestBody ReservationDTO reservationDTO) {
         log.debug("REST request to update Reservation : {}", reservationDTO);
         Optional<ReservationDTO> updateReservation = reservationService.updateReservation(reservationDTO);

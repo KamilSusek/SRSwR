@@ -94,8 +94,12 @@ const ClientReservation = (props: IClientReservation) => {
     history.push(`/reservation/${id}`);
   };
 
+  const editReservation = (id: number) => {
+    history.push(`/reservation/edit/${id}`);
+  };
+
   const actions = props.isOwner
-    ? { delete: deleteReservation }
+    ? { delete: deleteReservation, edit: editReservation }
     : props.isUser
     ? { assign: assignReservation, details: fetchSingleReservation }
     : {};

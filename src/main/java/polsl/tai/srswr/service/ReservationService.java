@@ -66,7 +66,15 @@ public class ReservationService {
     }
 
     public Optional<ReservationDTO> updateReservation(ReservationDTO reservationDTO) {
-        return Optional.of(reservationRepository.save(new Reservation())).map(ReservationDTO::new);
+        Reservation reservation = reservationRepository.findById(reservationDTO.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Restaurant restaurant = restaurantRepository.findById(reservationDTO.getRestaurant().getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        reservation.setReservationStart(reservationDTO.getReservationStart());
+        reservation.setReservationEnd(reservationDTO.getReservationEnd());
+        reservation.setRestaurant(restaurant);
+        reservation.setNotes(reservationDTO.getNotes());
+        reservation.setNumberOfPlaces(reservationDTO.getNumberOfPlaces());
+        reservation.setTableNumber(reservationDTO.getTableNumber());
+        return Optional.of(reservationRepository.save(reservation)).map(ReservationDTO::new);
     }
 
     @Transactional(readOnly = true)

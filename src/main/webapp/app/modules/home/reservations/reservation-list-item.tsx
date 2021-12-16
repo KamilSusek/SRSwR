@@ -12,6 +12,7 @@ export interface IButtonAction {
 export interface ReservationActions {
   details?: (id: number) => void;
   delete?: (id: number) => void;
+  edit?: (id: number) => void;
   assign?: (code: string) => void;
   cancel?: (code: string) => void;
 }
@@ -56,6 +57,22 @@ const ReservationListItem = (props: IReservationListItem) => {
       <></>
     );
 
+  const renderEditButton = () =>
+    props.listItemActions && props.listItemActions.edit ? (
+      <Button
+        className="w-100"
+        size="sm"
+        color="primary"
+        onClick={() => {
+          dispatch(props.listItemActions.edit(id));
+        }}
+      >
+        Edytuj
+      </Button>
+    ) : (
+      <></>
+    );
+
   const renderCancelButton = () =>
     props.listItemActions && props.listItemActions.cancel ? (
       <Button
@@ -73,7 +90,7 @@ const ReservationListItem = (props: IReservationListItem) => {
       <></>
     );
 
-    const renderDeleteButton = () =>
+  const renderDeleteButton = () =>
     props.listItemActions && props.listItemActions.delete ? (
       <Button
         className="w-100"
@@ -159,6 +176,7 @@ const ReservationListItem = (props: IReservationListItem) => {
       <Row className="justify-center">
         <Col xs="12" md="6" className="mt-1">
           {renderDetailsButton()}
+          {renderEditButton()}
         </Col>
         <Col xs="12" md="6" className="mt-1">
           {renderActionButton()}
