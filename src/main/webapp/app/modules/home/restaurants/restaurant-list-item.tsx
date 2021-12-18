@@ -2,6 +2,8 @@ import React from 'react';
 import { Restaurant } from '../../../shared/model/restaurant.model';
 import { Container, Row, Col, Label, Input, Button } from 'reactstrap';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { deleteRestaurant } from './restaurant.reducer';
 
 interface IRestaurantListItem {
   data: Restaurant;
@@ -10,9 +12,14 @@ interface IRestaurantListItem {
 const RestaurantListItem = (props: IRestaurantListItem) => {
   const { data } = props;
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const goToEditForm = () => {
     history.push(`restaurants/edit/${data.id}`);
+  };
+
+  const handleDeleteById = () => {
+    dispatch(deleteRestaurant(data.id));
   };
 
   return (
@@ -46,7 +53,18 @@ const RestaurantListItem = (props: IRestaurantListItem) => {
           </Label>
         </Col>
       </Row>
-      <Button color="primary" onClick={goToEditForm}>Edytuj</Button>
+      <Row>
+        <Col xs="12" md="12" className="m-1">
+          <Button className="w-100" color="primary" onClick={goToEditForm}>
+            Edytuj
+          </Button>
+        </Col>
+        <Col xs="12" md="12" className="m-1">
+          <Button className="w-100" color="danger" onClick={handleDeleteById}>
+            Usun
+          </Button>
+        </Col>
+      </Row>
     </Container>
   );
 };

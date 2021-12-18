@@ -14,6 +14,7 @@ import polsl.tai.srswr.domain.User;
 import polsl.tai.srswr.repository.RestaurantRepository;
 import polsl.tai.srswr.repository.UserRepository;
 import polsl.tai.srswr.service.dto.RestaurantDTO;
+import polsl.tai.srswr.web.rest.errors.BadRequestAlertException;
 
 import java.util.Optional;
 
@@ -44,6 +45,16 @@ public class RestaurantService {
         restaurant.setDescription(restaurantDTO.getDescription());
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
         return new RestaurantDTO(savedRestaurant);
+    }
+
+    @Transactional
+    public void deleteRestaurant(String id) {
+        Restaurant restaurant = restaurantRepository.findAllByIdAndOwner(Long.valueOf(id), getCurrentUserFromContext())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (restaurant.getReservations().size() > 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        restaurantRepository.delete(restaurant);
     }
 
     @Transactional(readOnly = true)

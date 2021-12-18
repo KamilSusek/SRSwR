@@ -20,12 +20,16 @@ const RestaurantsList = (props: IRestaurantsList) => {
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
 
-  useEffect(() => {
+  const fetchRestarurants = () => {
     props.getAllRestaurants(pagination.activePage - 1, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
     const endURL = `?page=${pagination.activePage}&sort=${pagination.sort},${pagination.order}`;
     if (props.location.search !== endURL) {
       props.history.push(`${props.location.pathname}${endURL}`);
     }
+  };
+
+  useEffect(() => {
+    fetchRestarurants();
   }, [pagination.activePage, pagination.order, pagination.sort]);
 
   useEffect(() => {
@@ -42,6 +46,12 @@ const RestaurantsList = (props: IRestaurantsList) => {
       });
     }
   }, [props.location.search]);
+
+  useEffect(() => {
+    if (props.deleteSuccess) {
+      fetchRestarurants();
+    }
+  }, [props.deleting, props.deleteSuccess]);
 
   const sort = p => () =>
     setPagination({
@@ -88,6 +98,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   restaurants: storeState.restaurants.restaurants,
   totalItems: storeState.restaurants.totalItems,
   loading: storeState.restaurants.loading,
+  deleteSuccess: storeState.restaurants.deleteSuccess,
+  deleting: storeState.restaurants.deleting,
 });
 
 const mapDispatchToProps = { getAllRestaurants };

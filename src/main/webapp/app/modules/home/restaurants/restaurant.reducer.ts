@@ -2,12 +2,13 @@ import axios from 'axios';
 
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { Restaurant } from '../../../shared/model/restaurant.model';
-import { ICrudPutAction } from 'react-jhipster';
+import { ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
 
 export const ACTION_TYPES = {
   FETCH_RESTAURANTS: 'restaurants/FETCH_RESTAURANTS',
   FETCH_RESTAURANT: 'restaurants/FETCH_RESTAURANT',
   UPDATE_RESTAURANT: 'restaurants/UPDATE_RESTAURANT',
+  DELETE_RESTAURANT: 'restaurants/DELETE_RESTAURANT',
   FETCH_RESTAURANTS_NOT_PAGED: 'restaurants/FETCH_RESTAURANTS_NOT_PAGED',
   CREATE_RESTAURANT: 'restaurants/CREATE_RESTAURANT',
   RESET: 'restaurants/RESET',
@@ -18,6 +19,8 @@ const initialState = {
   errorMessage: null,
   updating: false,
   updateSuccess: false,
+  deleting: false,
+  deleteSuccess: false,
   restaurants: [],
   restaurant: null,
   totalItems: 0,
@@ -41,7 +44,13 @@ export default (state: RestaurantsState = initialState, action): RestaurantsStat
         errorMessage: null,
         loading: true,
       };
-
+    case REQUEST(ACTION_TYPES.DELETE_RESTAURANT):
+      return {
+        ...state,
+        errorMessage: null,
+        deleteSuccess: false,
+        deleting: true,
+      };
     case REQUEST(ACTION_TYPES.FETCH_RESTAURANTS_NOT_PAGED):
       return {
         ...state,
@@ -83,6 +92,14 @@ export default (state: RestaurantsState = initialState, action): RestaurantsStat
         updateSuccess: false,
         errorMessage: action.payload,
       };
+    case FAILURE(ACTION_TYPES.DELETE_RESTAURANT):
+      return {
+        ...state,
+        loading: false,
+        deleting: false,
+        deleteSuccess: false,
+        errorMessage: action.payload,
+      };
     case SUCCESS(ACTION_TYPES.FETCH_RESTAURANTS):
       return {
         ...state,
@@ -108,6 +125,12 @@ export default (state: RestaurantsState = initialState, action): RestaurantsStat
         ...state,
         loading: false,
         restaurant: action.payload.data,
+      };
+    case SUCCESS(ACTION_TYPES.DELETE_RESTAURANT):
+      return {
+        ...state,
+        deleteSuccess: true,
+        deleting: false,
       };
     case ACTION_TYPES.RESET:
       return {
@@ -157,6 +180,14 @@ export const updateRestaurant: ICrudPutAction<Restaurant> = restaurant => async 
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_RESTAURANT,
     payload: axios.put(apiUrl, restaurant),
+  });
+  return result;
+};
+
+export const deleteRestaurant: ICrudDeleteAction<void> = id => async dispatch => {
+  const result = await dispatch({
+    type: ACTION_TYPES.DELETE_RESTAURANT,
+    payload: axios.delete(apiUrl + '/' + id),
   });
   return result;
 };

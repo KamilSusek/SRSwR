@@ -57,4 +57,10 @@ public class RestaurantResource {
     public ResponseEntity<RestaurantDTO> getRestaurant(@PathVariable String id) {
         return ResponseUtil.wrapOrNotFound(restaurantService.getRestaurant(id).map(RestaurantDTO::new));
     }
+
+    @DeleteMapping("/restaurants/{id}")
+    public ResponseEntity<?> updateRestaurant(@PathVariable String id) throws URISyntaxException {
+        restaurantService.deleteRestaurant(id);
+        return ResponseEntity.ok().build();
+    }
 }
