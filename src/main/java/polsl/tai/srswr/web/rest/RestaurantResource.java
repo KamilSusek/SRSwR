@@ -2,6 +2,7 @@ package polsl.tai.srswr.web.rest;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -39,10 +40,21 @@ public class RestaurantResource {
             .body(savedRestaurant);
     }
 
+    @PutMapping("/restaurants")
+    public ResponseEntity<RestaurantDTO> updateRestaurant(@Valid @RequestBody RestaurantDTO restaurant) throws URISyntaxException {
+        RestaurantDTO savedRestaurant = restaurantService.updateRestaurant(restaurant);
+        return ResponseEntity.ok(savedRestaurant);
+    }
+
     @GetMapping("/restaurants")
     public ResponseEntity<List<RestaurantDTO>> getRestaurants(Pageable pageable) {
         final Page<RestaurantDTO> page = restaurantService.getAllRestaurants(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/restaurants/{id}")
+    public ResponseEntity<RestaurantDTO> getRestaurant(@PathVariable String id) {
+        return ResponseUtil.wrapOrNotFound(restaurantService.getRestaurant(id).map(RestaurantDTO::new));
     }
 }

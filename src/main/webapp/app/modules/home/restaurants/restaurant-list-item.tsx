@@ -1,6 +1,7 @@
 import React from 'react';
 import { Restaurant } from '../../../shared/model/restaurant.model';
-import { Container, Row, Col, Label, Input } from 'reactstrap';
+import { Container, Row, Col, Label, Input, Button } from 'reactstrap';
+import { useHistory } from 'react-router-dom';
 
 interface IRestaurantListItem {
   data: Restaurant;
@@ -8,6 +9,12 @@ interface IRestaurantListItem {
 
 const RestaurantListItem = (props: IRestaurantListItem) => {
   const { data } = props;
+  const history = useHistory();
+
+  const goToEditForm = () => {
+    history.push(`restaurants/edit/${data.id}`);
+  };
+
   return (
     <Container className="m-1 d-flex flex-column">
       <h1>{data.restaurantName}</h1>
@@ -39,6 +46,7 @@ const RestaurantListItem = (props: IRestaurantListItem) => {
           </Label>
         </Col>
       </Row>
+      <Button color="primary" onClick={goToEditForm}>Edytuj</Button>
     </Container>
   );
 };
