@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Reservation } from 'app/shared/model/reservation.model';
+import { Button } from 'reactstrap';
 import ReservationListItem, { ReservationActions } from '../reservations/reservation-list-item';
 import ReservationFilters from './filters/reservation-filters';
 import { IRootState } from 'app/shared/reducers';
@@ -107,6 +108,18 @@ const ClientReservation = (props: IClientReservation) => {
   return (
     <UIListComponent<Reservation, ReservationActions>
       title="Wszystkie rezerwacje"
+      ActionButton={
+        props.isOwner && (
+          <Button
+            onClick={() => {
+              history.push('/reservations/create');
+            }}
+            color="primary"
+          >
+            Dodaj rezerwacje
+          </Button>
+        )
+      }
       data={props.reservations}
       FilterElement={ReservationFilters}
       ListItem={ReservationListItem}

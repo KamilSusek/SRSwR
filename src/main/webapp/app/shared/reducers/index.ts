@@ -10,7 +10,6 @@ import userManagement, { UserManagementState } from 'app/modules/administration/
 import register, { RegisterState } from 'app/modules/account/register/register.reducer';
 import activate, { ActivateState } from 'app/modules/account/activate/activate.reducer';
 import password, { PasswordState } from 'app/modules/account/password/password.reducer';
-import settings, { SettingsState } from 'app/modules/account/settings/settings.reducer';
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
 import clientReservations, { ClientReservationsState } from '../../modules/home/client-user/client-reservation.reducer';
 import restaurants, { RestaurantsState } from '../../modules/home/restaurants/restaurant.reducer';
@@ -26,7 +25,6 @@ export interface IRootState {
   readonly activate: ActivateState;
   readonly passwordReset: PasswordResetState;
   readonly password: PasswordState;
-  readonly settings: SettingsState;
   readonly clientReservations: ClientReservationsState;
   readonly restaurants: RestaurantsState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
@@ -43,7 +41,6 @@ const rootReducer = combineReducers<IRootState>({
   activate,
   passwordReset,
   password,
-  settings,
   clientReservations,
   restaurants,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */

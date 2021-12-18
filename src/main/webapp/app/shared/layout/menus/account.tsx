@@ -7,14 +7,11 @@ import { NavDropdown } from './menu-components';
 
 const accountMenuItemsAuthenticated = (
   <NavDropdown icon="user" name={translate('global.menu.account.main')} id="account-menu">
-    <MenuItem icon="wrench" to="/account/settings">
-      <Translate contentKey="global.menu.account.settings">Settings</Translate>
-    </MenuItem>
     <MenuItem icon="lock" to="/account/password">
-      <Translate contentKey="global.menu.account.password">Password</Translate>
+      Zmień hasło
     </MenuItem>
     <MenuItem icon="sign-out-alt" to="/logout">
-      <Translate contentKey="global.menu.account.logout">Sign out</Translate>
+      Wyloguj się
     </MenuItem>
   </NavDropdown>
 );
@@ -23,16 +20,12 @@ const accountMenuItems = (
   <>
     <NavItem>
       <NavLink tag={Link} to="/login" className="d-flex align-items-center">
-        <span>
-          <Translate contentKey="global.menu.account.login">Sign in</Translate>
-        </span>
+        <span>Zaloguj sie</span>
       </NavLink>
     </NavItem>
     <NavItem>
       <NavLink tag={Link} to="/account/register" className="d-flex align-items-center">
-        <span>
-          <Translate contentKey="global.menu.account.register">Sign in</Translate>
-        </span>
+        <span>Zaloz konto</span>
       </NavLink>
     </NavItem>
   </>

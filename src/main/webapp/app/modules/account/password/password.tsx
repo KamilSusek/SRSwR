@@ -32,60 +32,56 @@ export const PasswordPage = (props: IUserPasswordProps) => {
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="password-title">
-            <Translate contentKey="password.title" interpolate={{ username: props.account.login }}>
-              Password for {props.account.login}
-            </Translate>
-          </h2>
+          <h2 id="password-title">Zmień hasło dla użytkownika: {props.account.login}</h2>
           <AvForm id="password-form" onValidSubmit={handleValidSubmit}>
             <AvField
               name="currentPassword"
-              label={translate('global.form.currentpassword.label')}
-              placeholder={translate('global.form.currentpassword.placeholder')}
+              label="Obecne hasło"
+              placeholder="Obecne hasło"
               type="password"
               validate={{
-                required: { value: true, errorMessage: translate('global.messages.validate.newpassword.required') },
+                required: { value: true, errorMessage: 'Pole jest wymagane.' },
               }}
             />
             <AvField
               name="newPassword"
-              label={translate('global.form.newpassword.label')}
-              placeholder={translate('global.form.newpassword.placeholder')}
+              label="Nowe hasło"
+              placeholder="Nowe hasło"
               type="password"
               validate={{
-                required: { value: true, errorMessage: translate('global.messages.validate.newpassword.required') },
-                minLength: { value: 4, errorMessage: translate('global.messages.validate.newpassword.minlength') },
-                maxLength: { value: 50, errorMessage: translate('global.messages.validate.newpassword.maxlength') },
+                required: { value: true, errorMessage: 'Pole jest wymagane.' },
+                minLength: { value: 4, errorMessage: 'Hasło powinno zawierac minimalnie 4 znaki.' },
+                maxLength: { value: 50, errorMessage: 'Hasło powinno zawierac maksymalnie 50 znaków.' },
               }}
               onChange={updatePassword}
             />
             <PasswordStrengthBar password={password} />
             <AvField
               name="confirmPassword"
-              label={translate('global.form.confirmpassword.label')}
-              placeholder={translate('global.form.confirmpassword.placeholder')}
+              label="Potwierdź nowe hasło"
+              placeholder="Potwierdź nowe hasło"
               type="password"
               validate={{
                 required: {
                   value: true,
-                  errorMessage: translate('global.messages.validate.confirmpassword.required'),
+                  errorMessage: 'Pole jest wymagane.',
                 },
                 minLength: {
                   value: 4,
-                  errorMessage: translate('global.messages.validate.confirmpassword.minlength'),
+                  errorMessage: 'Hasło powinno zawierac minimalnie 4 znaki.',
                 },
                 maxLength: {
                   value: 50,
-                  errorMessage: translate('global.messages.validate.confirmpassword.maxlength'),
+                  errorMessage: 'Hasło powinno zawierac maksymalnie 50 znaków.',
                 },
                 match: {
                   value: 'newPassword',
-                  errorMessage: translate('global.messages.error.dontmatch'),
+                  errorMessage: 'Hasła nie są takie same.',
                 },
               }}
             />
             <Button color="success" type="submit">
-              <Translate contentKey="password.form.button">Save</Translate>
+              Zapisz
             </Button>
           </AvForm>
         </Col>

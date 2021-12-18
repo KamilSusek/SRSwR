@@ -44,7 +44,6 @@ const Header = (props: IHeaderProps) => {
         <Collapse isOpen={menuOpen} navbar>
           <Nav id="header-tabs" className="ml-auto" navbar>
             {props.isOwner && <Restaurants />}
-            {props.isOwner && <AddReservation />}
             {props.isUser && <MyReservations />}
             {props.isAuthenticated && <Reservations />}
             <AccountMenu isAuthenticated={props.isAuthenticated} />

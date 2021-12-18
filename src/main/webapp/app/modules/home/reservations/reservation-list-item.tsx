@@ -174,15 +174,15 @@ const ReservationListItem = (props: IReservationListItem) => {
         </Col>
       </Row>
       <Row className="justify-center">
-        <Col xs="12" md="6" className="mt-1">
+        <Col xs="12" md="6">
           {renderDetailsButton()}
           {renderEditButton()}
         </Col>
-        <Col xs="12" md="6" className="mt-1">
+        <Col xs="12" md="6">
           {renderActionButton()}
+          {renderDeleteButton()}
         </Col>
         {renderCancelButton()}
-        {renderDeleteButton()}
       </Row>
     </Container>
   );

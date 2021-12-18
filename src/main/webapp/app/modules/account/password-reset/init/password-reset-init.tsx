@@ -25,27 +25,27 @@ export class PasswordResetInit extends React.Component<IPasswordResetInitProps> 
         <Row className="justify-content-center">
           <Col md="8">
             <h1>
-              <Translate contentKey="reset.request.title">Reset your password</Translate>
+              Resetuj hasło
             </h1>
             <Alert color="warning">
               <p>
-                <Translate contentKey="reset.request.messages.info">Enter the email address you used to register</Translate>
+                Wprowadź adres email, na który zarejestrowano konto.
               </p>
             </Alert>
             <AvForm onValidSubmit={this.handleValidSubmit}>
               <AvField
                 name="email"
-                label={translate('global.form.email.label')}
-                placeholder={translate('global.form.email.placeholder')}
+                label="Email"
+                placeholder="Email"
                 type="email"
                 validate={{
-                  required: { value: true, errorMessage: translate('global.messages.validate.email.required') },
-                  minLength: { value: 5, errorMessage: translate('global.messages.validate.email.minlength') },
-                  maxLength: { value: 254, errorMessage: translate('global.messages.validate.email.maxlength') },
+                  required: { value: true, errorMessage: "Pole jest wymagane." },
+                  minLength: { value: 5, errorMessage: 'Pole powinno zawierac minimalnie 5 znaków.' },
+                  maxLength: { value: 254, errorMessage: 'Pole powinno zawierac maksymalnie 254 znaki.' },
                 }}
               />
               <Button color="primary" type="submit">
-                <Translate contentKey="reset.request.form.button">Reset password</Translate>
+                Resetuj hasło
               </Button>
             </AvForm>
           </Col>
