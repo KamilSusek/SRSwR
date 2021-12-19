@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import polsl.tai.srswr.service.RestaurantService;
-import polsl.tai.srswr.service.dto.ReservationDTO;
 import polsl.tai.srswr.service.dto.RestaurantDTO;
 
 import javax.validation.Valid;

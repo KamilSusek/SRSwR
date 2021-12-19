@@ -1,38 +1,38 @@
 package polsl.tai.srswr.web.rest;
 
-import polsl.tai.srswr.config.Constants;
-import polsl.tai.srswr.domain.User;
-import polsl.tai.srswr.repository.UserRepository;
-import polsl.tai.srswr.security.AuthoritiesConstants;
-import polsl.tai.srswr.service.MailService;
-import org.springframework.data.domain.Sort;
-import java.util.Collections;
-import polsl.tai.srswr.service.UserService;
-import polsl.tai.srswr.service.dto.UserDTO;
-import polsl.tai.srswr.web.rest.errors.BadRequestAlertException;
-import polsl.tai.srswr.web.rest.errors.EmailAlreadyUsedException;
-import polsl.tai.srswr.web.rest.errors.LoginAlreadyUsedException;
-
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import polsl.tai.srswr.config.Constants;
+import polsl.tai.srswr.domain.User;
+import polsl.tai.srswr.repository.UserRepository;
+import polsl.tai.srswr.security.AuthoritiesConstants;
+import polsl.tai.srswr.service.MailService;
+import polsl.tai.srswr.service.UserService;
+import polsl.tai.srswr.service.dto.UserDTO;
+import polsl.tai.srswr.web.rest.errors.BadRequestAlertException;
+import polsl.tai.srswr.web.rest.errors.EmailAlreadyUsedException;
+import polsl.tai.srswr.web.rest.errors.LoginAlreadyUsedException;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing users.
@@ -106,7 +106,6 @@ public class UserResource {
             throw new EmailAlreadyUsedException();
         } else {
             User newUser = userService.createUser(userDTO);
-            mailService.sendCreationEmail(newUser);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
                 .headers(HeaderUtil.createAlert(applicationName,  "userManagement.created", newUser.getLogin()))
                 .body(newUser);
