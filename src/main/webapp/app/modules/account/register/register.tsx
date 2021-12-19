@@ -12,6 +12,7 @@ export interface IRegisterProps extends StateProps, DispatchProps {}
 
 export const RegisterPage = (props: IRegisterProps) => {
   const [password, setPassword] = useState('');
+  const [isOwner, setIsOwner] = useState(false);
 
   useEffect(
     () => () => {
@@ -21,7 +22,7 @@ export const RegisterPage = (props: IRegisterProps) => {
   );
 
   const handleValidSubmit = (event, values) => {
-    props.handleRegister(values.username, values.email, values.firstPassword, props.currentLocale);
+    props.handleRegister(values.username, values.email, values.firstPassword, isOwner, props.currentLocale);
     event.preventDefault();
   };
 
@@ -37,6 +38,13 @@ export const RegisterPage = (props: IRegisterProps) => {
       <Row className="justify-content-center">
         <Col md="8">
           <AvForm id="register-form" onValidSubmit={handleValidSubmit}>
+            <AvField
+              name="isOwner"
+              label="Załóż konto właściciela restauracji"
+              placeholder="Załóż konto właściciela restauracji"
+              type="checkbox"
+              onChange={e => setIsOwner(e.target.checked)}
+            />
             <AvField
               name="username"
               label="Login"
