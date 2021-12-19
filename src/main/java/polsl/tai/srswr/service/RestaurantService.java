@@ -52,7 +52,7 @@ public class RestaurantService {
         Restaurant restaurant = restaurantRepository.findAllByIdAndOwner(Long.valueOf(id), getCurrentUserFromContext())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         if (restaurant.getReservations().size() > 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new BadRequestAlertException("User has reservations", "restaurant", "restaurantCannotBeDeleted");
         }
         restaurantRepository.delete(restaurant);
     }

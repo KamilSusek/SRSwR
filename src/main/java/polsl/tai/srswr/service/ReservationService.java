@@ -9,7 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import polsl.tai.srswr.config.Constants;
 import polsl.tai.srswr.domain.Reservation;
 import polsl.tai.srswr.domain.Restaurant;
 import polsl.tai.srswr.domain.User;
@@ -19,11 +18,10 @@ import polsl.tai.srswr.repository.UserRepository;
 import polsl.tai.srswr.security.AuthoritiesConstants;
 import polsl.tai.srswr.security.SecurityUtils;
 import polsl.tai.srswr.service.dto.ReservationDTO;
-import polsl.tai.srswr.service.dto.UserDTO;
+import polsl.tai.srswr.web.rest.errors.BadRequestAlertException;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.stream.DoubleStream;
 
 @Service
 @AllArgsConstructor
@@ -60,7 +58,7 @@ public class ReservationService {
             .findByReservationCode(code)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         if (Instant.now().isAfter(reservation.getReservationStart())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new BadRequestAlertException("Cannot cancel reservation because it is outdated", "reservation", "reservationCannotBeCancelled");
         }
         reservation.setClient(null);
     }
@@ -115,7 +113,7 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findByIdAndOwner(id, user)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         if (reservation.getClient() != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new BadRequestAlertException("Cannot delete reservation because it is assigned", "reservation", "reservationCannotBeDeleted");
         }
         reservationRepository.deleteById(id);
     }
