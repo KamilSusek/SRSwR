@@ -3,6 +3,7 @@
     "title": "Error page!",
     "http": {
       "400": "Błąd podczas wykonywania operacji. Sprónuj ponownie później.",
+      "401": "Niepoprawne dane",
       "403": "Nie masz uprawnień do tej zawartości.",
       "404": "Brak zasoby.",
       "405": "The HTTP verb you used is not supported for this URL.",

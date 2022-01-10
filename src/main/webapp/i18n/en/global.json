@@ -134,6 +134,7 @@
     "restaurantCannotBeDeleted": "Nie można usunąć restauracji, ponieważ jest powiązana z aktualnymi rezerwacjami.",
     "reservationCannotBeDeleted": "Nie można usunąć rezerwacji, ponieważ jest powiązana z użytkownikiem.",
     "reservationCannotBeCancelled": "Nie można anulować rezerwacji, ponieważ czas anulowania upłynął.",
+    "restaurantExists": "Restauracja o takiej nazwie już istnieje.",
     "file": {
       "could.not.extract": "Could not extract file",
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""

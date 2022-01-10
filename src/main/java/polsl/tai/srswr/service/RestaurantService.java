@@ -28,14 +28,20 @@ public class RestaurantService {
 
     @Transactional
     public RestaurantDTO createRestaurant(RestaurantDTO restaurantDTO) {
+        User owner = getCurrentUserFromContext();
+        validateRestaurantUniqueNameAndOwner(restaurantDTO, owner);
+
         Restaurant restaurant = new Restaurant(restaurantDTO);
-        restaurant.setOwner(getCurrentUserFromContext());
+        restaurant.setOwner(owner);
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
         return new RestaurantDTO(savedRestaurant);
     }
 
     @Transactional
     public RestaurantDTO updateRestaurant(RestaurantDTO restaurantDTO) {
+        User owner = getCurrentUserFromContext();
+        validateRestaurantUniqueNameAndOwner(restaurantDTO, owner);
+
         Restaurant restaurant = restaurantRepository.findByIdAndOwner(restaurantDTO.getId(), getCurrentUserFromContext())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         restaurant.setRestaurantName(restaurantDTO.getRestaurantName());
@@ -71,5 +77,15 @@ public class RestaurantService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         return userRepository.findOneByLogin(currentPrincipalName).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    private void validateRestaurantUniqueNameAndOwner(RestaurantDTO restaurantDTO, User owner) {
+        Optional<Restaurant> existingRestaurant = restaurantRepository.findByRestaurantNameAndOwner(
+            restaurantDTO.getRestaurantName(),
+            owner);
+
+        if(existingRestaurant.isPresent()) {
+            throw new BadRequestAlertException("Restaurant exists", "restaurant", "restaurantExists");
+        }
     }
 }
