@@ -113,7 +113,8 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findByIdAndOwner(id, user)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         if (reservation.getClient() != null) {
-            throw new BadRequestAlertException("Cannot delete reservation because it is assigned", "reservation", "reservationCannotBeDeleted");
+            throw new BadRequestAlertException("Cannot delete reservation because it is assigned",
+                "reservation", "reservationCannotBeDeleted");
         }
         reservationRepository.deleteById(id);
     }
