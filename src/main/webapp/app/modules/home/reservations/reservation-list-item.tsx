@@ -132,41 +132,35 @@ const ReservationListItem = (props: IReservationListItem) => {
       <Row>
         <Col xs="12" md="6">
           <Row>
-            <Col xs="12" md="6">
-              <h5>Początek rezerwacji</h5>
+            <Col xs="12" md="12">
+              <h5>Data rezerwacji</h5>
             </Col>
           </Row>
           <Row className="d-flex align-items-center">
-            <Col xs="12" md="6">
+            <Col xs="12" md="12">
               <Label>
                 Data
                 <Input type="text" value={extractDate(reservationStart)} disabled />
-              </Label>
-            </Col>
-            <Col xs="12" md="4">
-              <Label>
-                Godzina
-                <Input type="text" value={extractTime(reservationStart)} disabled />
               </Label>
             </Col>
           </Row>
         </Col>
         <Col xs="12" md="6">
           <Row>
-            <Col xs="12" md="6">
+            <Col xs="12" md="12">
               <h5>Koniec rezerwacji</h5>
             </Col>
           </Row>
           <Row className="d-flex align-items-center">
             <Col xs="12" md="6">
               <Label>
-                Data
-                <Input type="text" value={extractDate(reservationEnd)} disabled />
+                Początek
+                <Input type="text" value={extractTime(reservationStart)} disabled />
               </Label>
             </Col>
-            <Col xs="12" md="4">
+            <Col xs="12" md="6">
               <Label>
-                Godzina
+                Koniec
                 <Input type="text" value={extractTime(reservationEnd)} disabled />
               </Label>
             </Col>
