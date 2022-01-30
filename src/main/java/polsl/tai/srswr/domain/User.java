@@ -68,6 +68,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(nullable = false)
     private boolean activated = false;
 
+    @NotNull
+    @Column(nullable = false)
+    private boolean disabled = false;
+
     @Size(min = 2, max = 10)
     @Column(name = "lang_key", length = 10)
     private String langKey;
@@ -88,6 +92,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @Column(name = "reset_date")
     private Instant resetDate = null;
+
+    @Column(name = "failed_login_attempts")
+    private Integer failedLoginAttempts = 0;
 
     @JsonIgnore
     @ManyToMany

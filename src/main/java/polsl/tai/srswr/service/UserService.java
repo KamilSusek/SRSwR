@@ -43,6 +43,8 @@ public class UserService {
 
     private final CacheManager cacheManager;
 
+    private static Integer MAX_FAILED_ATTEMPTS = 5;
+
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;

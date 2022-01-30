@@ -32,6 +32,9 @@
             <column name="activated" type="boolean" valueBoolean="false">
                 <constraints nullable="false" />
             </column>
+            <column name="disabled" type="boolean" valueBoolean="false">
+                <constraints nullable="false" />
+            </column>
             <column name="lang_key" type="varchar(10)"/>
             <column name="activation_key" type="varchar(20)"/>
             <column name="reset_key" type="varchar(20)"/>
@@ -44,6 +47,7 @@
             </column>
             <column name="last_modified_by" type="varchar(50)"/>
             <column name="last_modified_date" type="timestamp"/>
+            <column name="failed_login_attempts" type="integer"/>
         </createTable>
 
         <createTable tableName="jhi_authority">
@@ -84,6 +88,7 @@
                   tableName="jhi_user">
             <column name="id" type="numeric"/>
             <column name="activated" type="boolean"/>
+            <column name="disabled" type="boolean"/>
             <column name="created_date" type="timestamp"/>
         </loadData>
         <dropDefaultValue tableName="jhi_user" columnName="created_date" columnDataType="datetime"/>
